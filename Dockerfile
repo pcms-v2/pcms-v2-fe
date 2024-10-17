@@ -5,16 +5,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-ARG ENV_MODE
-ENV ENV_MODE=${ENV_MODE}
-RUN if [ "$ENV_MODE" = "production" ]; then \
-      npm run build:production; \
-    elif [ "$ENV_MODE" = "development" ]; then \
-      npm run build:development; \
-    else \
-      echo "ENV_MODE must be 'development' or 'production'"; \
-      exit 1; \
-    fi
+RUN npm run build:local
 
 FROM nginx:alpine
 WORKDIR /

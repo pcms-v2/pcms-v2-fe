@@ -48,9 +48,11 @@ const ModalFileUploader = ({ type, title, setFileData, errorDownload }) => {
   }, [fileData, errorData]);
 
   useEffect(() => {
+    console.log(errorData);
     if (errorData.length > 0) {
-      // setErrMsg('템플릿 파일이 잘못되었습니다.');
       setErrMsg('템플릿 파일에 오류가 있습니다.');
+    } else {
+      setErrMsg('');
     }
   }, [errorData]);
 

@@ -32,7 +32,7 @@ import Table from '../../../../components/common/Table';
 import Icon from '../../../../components/common/Icon';
 import InputBasic from '../../../../components/common/Input';
 import { ModalChildren } from '../AdminDeliveryRound.styles';
-import { Separator } from '../../../components/common/Separator';
+import { Separator } from '../../../../components/common/Separator';
 import { ERROR_MESSAGE } from '../../../../constants/message';
 import {
   isValidAddress,
@@ -75,11 +75,6 @@ const AdminDeliveryRoundDetail = () => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
   const [totalPage, setTotalPage] = useState(1);
-
-  // 현재 경로가 '/admin/deliveryRound/detail/dispatch'일 때 부모 컴포넌트를 숨김
-  const hideParent = location.pathname.includes([
-    `/admin/deliveryRound/detail/${deliveryRoundDetail.deliveryRoundId}/dispatch`,
-  ]);
 
   // [x] 페이지 변경 핸들러
   const handlePageChange = (event, page) => {
@@ -133,8 +128,6 @@ const AdminDeliveryRoundDetail = () => {
                 </>
               ),
               route: data.route || '-',
-              chuteNumber: data.chuteNumber || '-',
-              dockAndDriver: data.dockAndDriver || '-',
               recipientInfo: (
                 <Icon
                   iconType='detail'
@@ -244,15 +237,8 @@ const AdminDeliveryRoundDetail = () => {
   const cancleDeliveryRound = () => {
     const deliveryRoundStatus = deliveryRoundDetail.deliveryRoundStatus;
 
-    if (
-      deliveryRoundStatus === 'DELIVERY_REQUEST_WAITING' ||
-      deliveryRoundStatus === 'VEHICLE_ALLOCATION_WAITING' ||
-      deliveryRoundStatus === 'SORTING_SCAN_WAITING'
-    ) {
+    if (deliveryRoundStatus === 'DELIVERY_REQUEST_WAITING') {
       openDeliveryRequestCancelModal();
-      return;
-    } else {
-      alert('배송요청 상태에서만 취소가 가능합니다.');
       return;
     }
   };
@@ -269,38 +255,12 @@ const AdminDeliveryRoundDetail = () => {
         ]);
         return;
 
-      case 'VEHICLE_ALLOCATION_WAITING':
-        setButtonLabel([
-          BUTTON_TEXT.STATUS.DELIVERY_REQUEST.DISPATCH,
-          BUTTON_TEXT.STATUS.DELIVERY_REQUEST.DISPATCH_PROGRESS,
-        ]);
-        return;
-      case 'SORTING_SCAN_WAITING':
-        setButtonLabel([
-          BUTTON_TEXT.STATUS.DELIVERY_REQUEST.SORTING_SCAN,
-          BUTTON_TEXT.STATUS.DELIVERY_REQUEST.SORTING_SCANING_PROGRESS,
-
-          BUTTON_TEXT.STATUS.DELIVERY_REQUEST.DISPATCH_LIST_VIEW,
-        ]);
-        return;
-      case 'SORTING_SCAN_IN_PROGRESS':
-        setButtonLabel([
-          BUTTON_TEXT.STATUS.DELIVERY_REQUEST.SORTING_SCAN_PROGRESSING,
-        ]);
-        return;
-      case 'PICKUP_SCAN_WAITING':
-        setButtonLabel([BUTTON_TEXT.STATUS.DELIVERY_REQUEST.PICKUP_SCAN]);
-        return;
-
-      case 'IN_DELIVERY':
-        setButtonLabel([BUTTON_TEXT.STATUS.DELIVERY_REQUEST.DELIVERY]);
-        return;
-
-      case 'DELIVERY_COMPLETED':
-        setButtonLabel([BUTTON_TEXT.STATUS.DELIVERY_REQUEST.COMPLETE]);
+      case 'DELIVERY_ROUND_CLOSE':
+        setButtonLabel([BUTTON_TEXT.STATUS.DELIVERY_REQUEST.CLOSE]);
         return;
     }
   };
+
   // [x] 배송요청 상태에 따른 버튼 렌더링
   useEffect(() => {
     handleRequestStatus();
@@ -312,15 +272,6 @@ const AdminDeliveryRoundDetail = () => {
     switch (deliveryRoundStatus) {
       case 'DELIVERY_REQUEST_WAITING': // 요청확인대기 상태에서 요청확인 마감 핸들러
         openDeliveryRequestDeadlineModal();
-        return;
-      case 'VEHICLE_ALLOCATION_WAITING': // 배차 대기 상태에서 배차진행 핸들러(배차 진행 페이지로 이동)
-        // [ ] 배차 진행 페이지 개발
-        navigate(
-          `/admin/deliveryRound/detail/${deliveryRoundDetail.deliveryRoundId}/dispatch`
-        );
-        return;
-      case 'SORTING_SCAN_WAITING': // 분류스캔 대기 상태에서 분류 스캔 진행 핸들러
-        openStartSortScanModal();
         return;
     }
   };
@@ -809,9 +760,7 @@ const AdminDeliveryRoundDetail = () => {
       oneBtn: true,
     });
   };
-  return hideParent ? (
-    <Outlet />
-  ) : (
+  return (
     <div>
       <Header
         title={TITLE.DELIVERY_ROUND.DETAIL}
@@ -820,11 +769,8 @@ const AdminDeliveryRoundDetail = () => {
         buttonLabel={
           deliveryRoundDetail.deliveryRoundStatus ===
             'DELIVERY_REQUEST_WAITING' ||
-          deliveryRoundDetail.deliveryRoundStatus ===
-            'VEHICLE_ALLOCATION_WAITING'
-            ? //   ||
-              // deliveryRoundDetail.deliveryRoundStatus === 'SORTING_SCAN_WAITING'
-              [BUTTON_TEXT.BACK, BUTTON_TEXT.CANCEL.DELIVERY_REQUEST]
+          deliveryRoundDetail.deliveryRoundStatus === 'DELIVERY_ROUND_CLOSE'
+            ? [BUTTON_TEXT.BACK, BUTTON_TEXT.CANCEL.DELIVERY_REQUEST]
             : [BUTTON_TEXT.BACK]
         }
         onButtonClick={[handleBack, cancleDeliveryRound]}

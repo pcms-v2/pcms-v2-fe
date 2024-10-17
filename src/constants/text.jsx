@@ -113,6 +113,7 @@ export const BUTTON_TEXT = {
       PICKUP_SCAN: '픽업 스캔 대기',
       DELIVERY: '배송 중',
       COMPLETE: '배송 완료',
+      CLOSE: '요청 확인 마감',
     },
     SORTING_REQUEST: {
       WATING: '분류 대기',

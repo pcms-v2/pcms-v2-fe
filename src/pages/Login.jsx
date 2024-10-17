@@ -232,7 +232,7 @@ const Login = ({ display }) => {
         <img src={`${loginImage}`} alt='로그인' />
       </ImageContainer>
       <LoginContainer>
-        <MainTitle>{display ? '김천 CMS 디스플레이' : '김천 CMS'}</MainTitle>
+        <MainTitle>SMS</MainTitle>
         <SubTitle>
           Center Management System에 오신 것을 환영 합니다. 계정 관련 문의는
           센터 책임자를 통해 문의 바랍니다.

@@ -16,9 +16,6 @@ const AdminRoutingMainModify = lazy(
 const AdminRoutingMainDetail = lazy(
   () => import('../pages/admin/AdminRouting/components/AdminRoutingMainDetail')
 );
-const AdminDeliveryDriver = lazy(
-  () => import('../pages/admin/AdminDeliveryDriver')
-);
 const AdminDeliveryRound = lazy(
   () => import('../pages/admin/AdminDeliveryRound')
 );
@@ -26,18 +23,6 @@ const AdminDeliveryRoundDetail = lazy(
   () =>
     import(
       '../pages/admin/AdminDeliveryRound/components/AdminDeliveryRoundDetail'
-    )
-);
-const AdminDeliveryRoundDispatch = lazy(
-  () =>
-    import(
-      '../pages/admin/AdminDeliveryRound/components/AdminDeliveryRoundDispatch'
-    )
-);
-const AdminDeliveryRoundDispatchDetail = lazy(
-  () =>
-    import(
-      '../pages/admin/AdminDeliveryRound/components/AdminDeliveryRoundDispatchDetail'
     )
 );
 
@@ -83,26 +68,12 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: 'deliveryDriver',
-            element: <AdminDeliveryDriver />,
-          },
-          {
             path: 'deliveryRound',
             element: <AdminDeliveryRound />,
             children: [
               {
                 path: 'detail/:deliveryRoundId',
                 element: <AdminDeliveryRoundDetail />,
-                children: [
-                  {
-                    path: 'dispatch',
-                    element: <AdminDeliveryRoundDispatch />,
-                  },
-                  {
-                    path: 'dispatchDetail',
-                    element: <AdminDeliveryRoundDispatchDetail />,
-                  },
-                ],
               },
             ],
           },

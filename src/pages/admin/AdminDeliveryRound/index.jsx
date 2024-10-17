@@ -117,13 +117,7 @@ const AdminDeliveryRound = () => {
   const getStatusText = statusKey => {
     const statusMapping = {
       DELIVERY_REQUEST_WAITING: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.REQUEST,
-      VEHICLE_ALLOCATION_WAITING: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.DISPATCH,
-      SORTING_SCAN_WAITING: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.SORTING_SCAN,
-      SORTING_SCAN_IN_PROGRESS:
-        BUTTON_TEXT.STATUS.DELIVERY_REQUEST.SORTING_SCANING_PROGRESS,
-      PICKUP_SCAN_WAITING: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.PICKUP_SCAN,
-      IN_DELIVERY: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.DELIVERY,
-      DELIVERY_COMPLETED: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.COMPLETE,
+      DELIVERY_ROUND_CLOSE: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.CLOSE,
     };
     return statusMapping[statusKey] || statusKey;
   };
@@ -132,15 +126,7 @@ const AdminDeliveryRound = () => {
   const getStatusKey = statusText => {
     const statusMapping = {
       [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.REQUEST]: 'DELIVERY_REQUEST_WAITING',
-      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.DISPATCH]:
-        'VEHICLE_ALLOCATION_WAITING',
-      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.SORTING_SCAN]:
-        'SORTING_SCAN_WAITING',
-      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.SORTING_SCANING_PROGRESS]:
-        'SORTING_SCAN_IN_PROGRESS',
-      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.PICKUP_SCAN]: 'PICKUP_SCAN_WAITING',
-      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.DELIVERY]: 'IN_DELIVERY',
-      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.COMPLETE]: 'DELIVERY_COMPLETED',
+      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.CLOSE]: 'DELIVERY_ROUND_CLOSE',
     };
     return statusMapping[statusText] || statusText;
   };
@@ -225,7 +211,6 @@ const AdminDeliveryRound = () => {
       from: formatDateWithDateFns(startDate),
       to: formatDateWithDateFns(endDate),
     };
-
     if (selectedStatus && selectedStatus !== '전체') {
       params.deliveryRoundStatus = getStatusKey(selectedStatus);
     }
@@ -355,7 +340,7 @@ const AdminDeliveryRound = () => {
         ]}
         selectOptions={[
           shipperList?.map(shipper => shipper.name),
-          SELECT_OPTIONS.DELIVERY_STATUS,
+          SELECT_OPTIONS.SMS_DELIVERY_STATUS,
         ]}
         onSelectChange={[handleShipperChange, handleStatusChange]}
       />

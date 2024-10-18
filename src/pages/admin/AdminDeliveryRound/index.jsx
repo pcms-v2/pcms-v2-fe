@@ -117,7 +117,7 @@ const AdminDeliveryRound = () => {
   const getStatusText = statusKey => {
     const statusMapping = {
       DELIVERY_REQUEST_WAITING: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.REQUEST,
-      DELIVERY_ROUND_CLOSE: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.CLOSE,
+      DELIVERY_REQUEST_CLOSE: BUTTON_TEXT.STATUS.DELIVERY_REQUEST.CLOSE,
     };
     return statusMapping[statusKey] || statusKey;
   };
@@ -126,7 +126,7 @@ const AdminDeliveryRound = () => {
   const getStatusKey = statusText => {
     const statusMapping = {
       [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.REQUEST]: 'DELIVERY_REQUEST_WAITING',
-      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.CLOSE]: 'DELIVERY_ROUND_CLOSE',
+      [BUTTON_TEXT.STATUS.DELIVERY_REQUEST.CLOSE]: 'DELIVERY_REQUEST_CLOSE',
     };
     return statusMapping[statusText] || statusText;
   };

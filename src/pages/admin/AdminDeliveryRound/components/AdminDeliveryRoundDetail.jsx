@@ -255,7 +255,7 @@ const AdminDeliveryRoundDetail = () => {
         ]);
         return;
 
-      case 'DELIVERY_ROUND_CLOSE':
+      case 'DELIVERY_REQUEST_CLOSE':
         setButtonLabel([BUTTON_TEXT.STATUS.DELIVERY_REQUEST.CLOSE]);
         return;
     }
@@ -769,7 +769,7 @@ const AdminDeliveryRoundDetail = () => {
         buttonLabel={
           deliveryRoundDetail.deliveryRoundStatus ===
             'DELIVERY_REQUEST_WAITING' ||
-          deliveryRoundDetail.deliveryRoundStatus === 'DELIVERY_ROUND_CLOSE'
+          deliveryRoundDetail.deliveryRoundStatus === 'DELIVERY_REQUEST_CLOSE'
             ? [BUTTON_TEXT.BACK, BUTTON_TEXT.CANCEL.DELIVERY_REQUEST]
             : [BUTTON_TEXT.BACK]
         }

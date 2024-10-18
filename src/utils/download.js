@@ -27,7 +27,7 @@ export const donwloadTemplate = async () => {
       const seconds = String(now.getSeconds()).padStart(2, '0');
       const formattedDate = `${year}${month}${day}${hours}${minutes}${seconds}`;
 
-      const filename = `pcms_delivery_template_${formattedDate}.xlsx`;
+      const filename = `sms_delivery_template_${formattedDate}.xlsx`;
       saveAs(blob, filename);
     } else {
       console.error('파일 다운로드 실패:', response.statusText);
@@ -59,7 +59,7 @@ export const downloadTemplateURL = async url => {
       const seconds = String(now.getSeconds()).padStart(2, '0');
       const formattedDate = `${year}${month}${day}${hours}${minutes}${seconds}`;
 
-      const filename = `pcms_${url.includes('collect') ? 'collection' : url.includes('recovery') ? 'recovery' : 'sorting'}_template_${formattedDate}.xlsx`;
+      const filename = `sms_${url.includes('collect') ? 'collection' : url.includes('recovery') ? 'recovery' : 'sorting'}_template_${formattedDate}.xlsx`;
       saveAs(blob, filename);
     } else {
       console.error('파일 다운로드 실패:', response.statusText);

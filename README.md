@@ -1,4 +1,4 @@
-# PCMS-FE
+# SMS-FE
 
 ### 기술 스택
 
@@ -23,7 +23,7 @@
 폴더구조
 
 ```
-PCMS-FE
+SMS-FE
 ├─ .eslintrc.cjs
 ├─ .gitignore
 ├─ .prettierrc

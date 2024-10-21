@@ -248,7 +248,7 @@ const AdminDeliveryRound = () => {
             <Icon iconType='detail' onClick={() => showDeliveryDetail(data)} />
           ),
           deliveryRoundStatus:
-            data.deliveryRoundStatus === 'DELIVERY_ROUND_CLOSE' ? (
+            data.deliveryRoundStatus === 'DELIVERY_REQUEST_CLOSE' ? (
               <CommonButton
                 type='disabled'
                 label={getStatusText(data.deliveryRoundStatus)}

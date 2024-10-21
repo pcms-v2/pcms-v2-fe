@@ -1,10 +1,9 @@
 // ../pages/admin/AdminDeliveryRound/components/AdminDeliveryRoundDetail.jsx
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Header from '../../../../components/layout/Header/Header';
 import {
   BUTTON_TEXT,
   INPUT_TEXT,
-  MODAL,
   SELECT_OPTION,
   STATUS_BOX,
   TITLE,
@@ -17,7 +16,6 @@ import {
   Pagination,
   PaginationItem,
   Stack,
-  Typography,
 } from '@mui/material';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
@@ -48,7 +46,6 @@ import WarningText from '../../../../components/common/WarningText';
 
 const AdminDeliveryRoundDetail = () => {
   const { userInfo } = useUserStore();
-  const location = useLocation();
   const navigate = useNavigate();
 
   const { deliveryRoundId } = useParams();
@@ -63,8 +60,6 @@ const AdminDeliveryRoundDetail = () => {
 
   const [routeTypeList, setRouteTypeList] = useState([]);
   const routeTypeId = useRef(null);
-
-  const [dockList, setDockList] = useState([]);
 
   const recipientNameRef = useRef(null);
   const phoneNumberRef = useRef(null);
@@ -117,7 +112,7 @@ const AdminDeliveryRoundDetail = () => {
 
         const deliveryRoundDetailList = arrayData
           .sort((a, b) => a.productId - b.productId)
-          .map((data, index) => {
+          .map(data => {
             return {
               index: data.productId,
               trackingNumber: data.trackingNumber,
@@ -304,26 +299,7 @@ const AdminDeliveryRoundDetail = () => {
   // [x] 페이지 첫 로드시 라우트타입 리스트 조회
   useEffect(() => {
     getRouteTypeList();
-    getDockList();
   }, []);
-
-  // [x] 도크리스트 조회
-  const getDockList = async () => {
-    try {
-      const apiResult = await api.request({
-        Authorization: `Bearer ${userInfo.accessToken}`,
-        url: `${ROUTING.DOCK}`,
-        method: 'GET',
-      });
-
-      if (apiResult.status === 200) {
-        const { data } = apiResult;
-        setDockList(data.data);
-      }
-    } catch (error) {
-      console.log('error :', error);
-    }
-  };
 
   // [x] 요청 확인 마감 모달 셀렉트박스 변경 핸들러
   const handleSelectChange = option => {
@@ -447,41 +423,6 @@ const AdminDeliveryRoundDetail = () => {
         </ModalChildren>
       ),
       onProceed: () => deleteDeliveryInfo(pdId),
-    });
-  };
-
-  // 분류 스캔 진행 요청
-  const requestSortScan = async deliveryRoundId => {
-    await api
-      .request({
-        Authorization: `Bearer ${userInfo.accessToken}`,
-        url: `${ROUTING.DELIVERY}/${deliveryRoundId}/sorting`,
-        method: 'POST',
-      })
-      .then(response => {
-        if (response.status === 200) {
-          alert(`분류 스캔 진행 요청이 완료되었습니다.`);
-          getDeliveryRoundDetail();
-        }
-      })
-      .catch(error => alert(error.response.data.detailMessage));
-    closeModal();
-  };
-
-  // [x] 분류 스캔 진행 요청 모달 오픈
-  const openStartSortScanModal = () => {
-    setModal({
-      isOpen: true,
-      title: MODAL.TITLE.DELIVERY.SORTING_SCAN,
-      proceedBtnName: '요청',
-      warningMsg: `분류 스캔 진행을 요청 하시겠습니까?`,
-      children: (
-        <ModalChildren>
-          <Typography>[{deliveryRoundDetail.deliveryRoundName}]</Typography>
-          <Typography>배송 회차의 분류 스캔 진행을 요청합니다.</Typography>
-        </ModalChildren>
-      ),
-      onProceed: () => requestSortScan(deliveryRoundDetail.deliveryRoundId),
     });
   };
 

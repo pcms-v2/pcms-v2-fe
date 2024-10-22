@@ -5,7 +5,16 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build:docker
+ARG ENV_MODE
+ENV ENV_MODE=${ENV_MODE}
+RUN if [ "$ENV_MODE" = "production" ]; then \
+      npm run build:production; \
+    elif [ "$ENV_MODE" = "docker" ]; then \
+      npm run build:docker; \
+    else \
+      echo "ENV_MODE must be 'docker' or 'production'"; \
+      exit 1; \
+    fi
 
 FROM nginx:alpine
 WORKDIR /

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DOCKER_IMAGE_NAME=mcc-pcms-fe-image
-CONTAINER_NAME=mcc-pcms-frontend
+DOCKER_IMAGE_NAME=sms-fe-image
+CONTAINER_NAME=sms-fe-container
 ENV_MODE=${1:-}
 
 cleanup_container() {

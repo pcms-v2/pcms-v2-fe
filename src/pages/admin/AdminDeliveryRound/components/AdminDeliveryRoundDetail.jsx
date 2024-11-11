@@ -470,7 +470,13 @@ const AdminDeliveryRoundDetail = () => {
     if (lotAddressRef.current === null) {
       lotAddressRef.current = lotAddress;
     }
-
+    console.log(
+      recipientNameRef.current,
+      phoneNumberRef.current,
+      trackingNumberRef.current,
+      streetAddressRef.current,
+      lotAddressRef.current
+    );
     if (
       // 고객 이름이 한글이나 영어가 아닐때
       !isValidEnglishHangulOnly(recipientNameRef.current) ||
@@ -487,9 +493,9 @@ const AdminDeliveryRoundDetail = () => {
       return;
     } else if (
       // 전화번호가 11자리가 아닐때
-      !isValidPhoneNumber(phoneNumberRef.current) ||
-      !isValidPhoneNumber(phoneNumber)
+      !isValidPhoneNumber(phoneNumberRef.current)
     ) {
+      console.log(phoneNumberRef.current, phoneNumber);
       setErrMsg(ERROR_MESSAGE.COMMON.INFO.PHONE);
       return;
     } else if (

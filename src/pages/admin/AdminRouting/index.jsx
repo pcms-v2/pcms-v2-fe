@@ -3,7 +3,10 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import api from '../../../utils/api';
 import { formatDate } from '../../../utils/common';
-import { isValidString, isValidStringLength } from '../../../utils/validation';
+import {
+  isValidRouteTypeString,
+  isValidStringLength,
+} from '../../../utils/validation';
 import { useModalStore } from '../../../contexts/useModalStore';
 import useRoutingStore from '../../../contexts/useRoutingStore';
 import {
@@ -154,8 +157,9 @@ const AdminRouting = () => {
 
   const modRouteTypeInfo = async routeType => {
     if (
-      !isValidString(typeNameRef.current) ||
-      (typeDescriptionRef.current && !isValidString(typeDescriptionRef.current))
+      !isValidRouteTypeString(typeNameRef.current) ||
+      (typeDescriptionRef.current &&
+        !isValidRouteTypeString(typeDescriptionRef.current))
     ) {
       setErrMsg(ERROR_MESSAGE.ROUTE_TYPE.TEXT);
       return;
@@ -202,9 +206,10 @@ const AdminRouting = () => {
   };
 
   const addRouteType = async () => {
+    console.log(1);
     if (
-      !isValidString(typeNameRef.current) ||
-      (typeDescriptionRef.current && !isValidString(typeDescriptionRef.current))
+      typeDescriptionRef.current &&
+      !isValidRouteTypeString(typeDescriptionRef.current)
     ) {
       setErrMsg(ERROR_MESSAGE.ROUTE_TYPE.TEXT);
       return;
@@ -234,6 +239,8 @@ const AdminRouting = () => {
 
       if (apiResult.status === 200) {
         await getRouteTypeList();
+        typeNameRef.current = '';
+        typeDescriptionRef.current = '';
       } else {
         setErrMsg(ERROR_MESSAGE.COMMON.INSERT);
       }

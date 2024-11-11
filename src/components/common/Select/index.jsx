@@ -53,7 +53,7 @@ const Select = ({ options, onChange, label, modal, defaultValue, type }) => {
         <SelectHeader
           isOpen={isOpen}
           onClick={() => setIsOpen(!isOpen)}
-          style={{ width: modal ? '288px' : '140px' }}
+          style={{ width: modal ? '298px' : '140px' }}
         >
           {selectedOption}
           <ArrowIconWrapper>
@@ -65,7 +65,7 @@ const Select = ({ options, onChange, label, modal, defaultValue, type }) => {
           </ArrowIconWrapper>
         </SelectHeader>
         {isOpen && (
-          <OptionsList style={{ width: modal ? '288px' : '140px' }}>
+          <OptionsList style={{ width: modal ? '298px' : '140px' }}>
             {options.map(option => (
               <Option
                 key={option}

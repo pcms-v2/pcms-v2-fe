@@ -135,18 +135,21 @@ const AdminRoutingMain = () => {
             title={LABEL_TITLE.ROUTE.ROUTE_TYPE}
             disabled={true}
             value={routeType.typeName}
+            type={'modalContent'}
           />
           <InputBasic
             display='flex'
             title={LABEL_TITLE.ROUTE.ROUTE_MAIN}
             disabled={true}
             value={routeDetail.routeName}
+            type={'modalContent'}
           />
           <InputBasic
             display='flex'
             title={LABEL_TITLE.ROUTE.ROUTE_SUB}
             disabled={true}
             value={routeDetail.subRouteNames}
+            type={'modalContent'}
           />
         </>
       ),

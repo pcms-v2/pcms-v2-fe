@@ -134,7 +134,36 @@ const AdminRoutingMainAdd = () => {
     setIsLeftCheck(false);
   };
 
+  // const handleCheckedLeft = () => {
+  //   const findIndex = newSubRouteList.findIndex(
+  //     subRoute => subRoute.subRouteName === newSubRoute.subRouteName
+  //   );
+  //   const newValue = {
+  //     ...newSubRoute,
+  //     addresses: newSubRoute.addresses.concat(rightChecked),
+  //   };
+  //   const updatedNewSubRoute = newSubRouteList.map((subRoute, index) =>
+  //     index === findIndex ? newValue : subRoute
+  //   );
+
+  //   setNewSubRoute(newValue);
+  //   setNewSubRouteList(updatedNewSubRoute);
+  //   setUnsignedAddressList(not(unsignedAddressList, rightChecked));
+  //   setChecked(not(checked, rightChecked));
+  //   setIsRightCheck(false);
+  // };
+
   const handleCheckedLeft = () => {
+    if (!newSubRoute.subRouteName) {
+      setModal({
+        isOpen: true,
+        proceedBtnName: BUTTON_TEXT.CONFIRM.DEFAULT,
+        onProceed: closeModal,
+      });
+      setErrMsg(ERROR_MESSAGE.ROUTE.NO_SUB_ROUTE);
+      return;
+    }
+
     const findIndex = newSubRouteList.findIndex(
       subRoute => subRoute.subRouteName === newSubRoute.subRouteName
     );
@@ -240,6 +269,7 @@ const AdminRoutingMainAdd = () => {
       });
 
       setUnsignedAddressList(unsignedAddresses);
+      console.log(unsignedAddressList);
     }
   });
 
@@ -476,7 +506,7 @@ const AdminRoutingMainAdd = () => {
             size='small'
             aria-label='move selected left'
             onClick={handleCheckedLeft}
-            disabled={rightChecked.length === 0}
+            disabled={rightChecked.length === 0 || !newSubRoute.subRouteName}
           >
             <Icon iconType='leftArrow' />
           </BootstrapButton>

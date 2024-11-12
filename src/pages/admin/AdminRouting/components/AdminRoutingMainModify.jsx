@@ -423,35 +423,37 @@ const AdminRoutingMainModify = () => {
         sectionDivider={true}
         onButtonClick={[moveToRouteMain, modRoute]}
       />
-      <InputBasic
-        display='flex'
-        type='basic'
-        title={LABEL_TITLE.ROUTE.ROUTE_NAME}
-        value={routeNameRef.current}
-        onChange={onChangeRouteName}
-      ></InputBasic>
-      <InputBasic
-        display='flex'
-        type='basic'
-        title={LABEL_TITLE.ROUTE.ROUTE_DESCRIPTION}
-        value={routeDescriptionRef.current}
-        onChange={onChangeRouteDescription}
-      ></InputBasic>
-      <Divider type='basic' marginBottom='26px' />
-      <SubRouteSearchWrapper>
+      <div style={{ width: '550px' }}>
         <InputBasic
           display='flex'
           type='basic'
-          title={LABEL_TITLE.ROUTE.SUB_ROUTE}
-          placeholder={INPUT_TEXT.PLACEHOLDER.SUB_ROUTE}
-          onChange={onChangeSubRouteName}
+          title={LABEL_TITLE.ROUTE.ROUTE_NAME}
+          value={routeNameRef.current}
+          onChange={onChangeRouteName}
         ></InputBasic>
-        <CommonButton
-          label={BUTTON_TEXT.ADD.DEFAULT}
-          type='black'
-          onClick={addNewSubRoute}
-        />
-      </SubRouteSearchWrapper>
+        <InputBasic
+          display='flex'
+          type='basic'
+          title={LABEL_TITLE.ROUTE.ROUTE_DESCRIPTION}
+          value={routeDescriptionRef.current}
+          onChange={onChangeRouteDescription}
+        ></InputBasic>
+        <Divider type='basic' marginBottom='26px' />
+        <SubRouteSearchWrapper>
+          <InputBasic
+            display='flex'
+            type='basic'
+            title={LABEL_TITLE.ROUTE.SUB_ROUTE}
+            placeholder={INPUT_TEXT.PLACEHOLDER.SUB_ROUTE}
+            onChange={onChangeSubRouteName}
+          ></InputBasic>
+          <CommonButton
+            label={BUTTON_TEXT.ADD.DEFAULT}
+            type='black'
+            onClick={addNewSubRoute}
+          />
+        </SubRouteSearchWrapper>
+      </div>
 
       <SearchWrapper>
         <SubRouteInfoBox>

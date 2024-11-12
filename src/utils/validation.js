@@ -4,6 +4,12 @@ export const isValidString = str => {
   return regex.test(str);
 };
 
+export const isValidRouteTypeString = str => {
+  const regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\s]+$/;
+
+  return regex.test(str);
+};
+
 export const isValidEnglishNumberOnly = str => {
   const regex = /^[a-zA-Z0-9\s]+$/;
 
@@ -16,7 +22,8 @@ export const isValidStringLength = (str, maxLength) => {
 
 export const isValidPhoneNumber = str => {
   const regex = /^\d{3}-\d{4}-\d{4}$/;
-
+  console.log(regex.test(str));
+  console.log(typeof regex);
   return regex.test(str);
 };
 

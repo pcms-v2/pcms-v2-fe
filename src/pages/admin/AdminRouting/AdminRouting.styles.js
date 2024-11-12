@@ -125,7 +125,7 @@ export const TextWrapper = styled.div`
   margin-top: 0.8rem;
 `;
 
-export const SearchInputWraaper = styled.div`
+export const SearchInputWraper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

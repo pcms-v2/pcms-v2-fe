@@ -1,23 +1,23 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../utils/api';
 import {
   isValidEnglishNumberOnly,
   isValidString,
   isValidStringLength,
-} from '../../../../utils/validation';
-import { useModalStore } from '../../../../contexts/useModalStore';
-import { ERROR_MESSAGE } from '../../../../constants/message';
+} from '@utils/validation.js';
+import { useModalStore } from '@contexts/useModalStore.jsx';
+import { ERROR_MESSAGE } from '@constants/message.jsx';
 import useRoutingStore from '../../../../contexts/useRoutingStore';
-import { ROUTING } from '../../../../constants/apiEndpoint';
+import { ROUTING } from '@constants/apiEndpoint.jsx';
 import Header from '../../../../components/layout/Header/Header';
 import {
   BUTTON_TEXT,
   INPUT_TEXT,
   LABEL_TITLE,
   TITLE,
-} from '../../../../constants/text';
-import { Divider } from '../../../../components/common/SectionDivider/SectionDivider.styles';
+} from '@constants/text.jsx';
+import { Divider } from '@components/common/SectionDivider/SectionDivider.styles.js';
 import InputBasic from '../../../../components/common/Input';
 import CommonButton from '../../../../components/common/Button';
 import DeleteBox from '../../../../components/DeleteBox';
@@ -25,27 +25,27 @@ import SearchInputBasic from '../../../../components/common/SearchInput';
 import CommonCheckBox from '../../../../components/common/CheckBox';
 import Icon from '../../../../components/common/Icon';
 import {
+  Checkbox,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Checkbox,
   Paper,
 } from '@mui/material';
 import {
-  SubRouteSearchWrapper,
-  SearchWrapper,
-  SearchInputWraaper,
-  ButtonWrapper,
-  AsignedBox,
-  NonAsignedBox,
-  SubRouteInfoText,
-  CheckAllBox,
   AddressText,
-  SubRouteInfoBox,
+  AsignedBox,
   BootstrapButton,
+  ButtonWrapper,
+  CheckAllBox,
+  NonAsignedBox,
+  SearchInputWraper,
+  SearchWrapper,
+  SubRouteInfoBox,
+  SubRouteInfoText,
+  SubRouteSearchWrapper,
 } from '../AdminRouting.styles';
-import { useUserStore } from '../../../../contexts/useUserStore';
+import { useUserStore } from '@contexts/useUserStore.jsx';
 
 const not = (a, b) => {
   return a.filter(value => b.indexOf(value) === -1);
@@ -59,7 +59,7 @@ const AdminRoutingMainAdd = () => {
   const { userInfo } = useUserStore();
   const navigate = useNavigate();
 
-  const { routeType, routeMainDetail } = useRoutingStore();
+  const { routeType } = useRoutingStore();
   const { setModal, setErrMsg, closeModal } = useModalStore();
 
   const keywordRef = useRef('');
@@ -134,25 +134,6 @@ const AdminRoutingMainAdd = () => {
     setIsLeftCheck(false);
   };
 
-  // const handleCheckedLeft = () => {
-  //   const findIndex = newSubRouteList.findIndex(
-  //     subRoute => subRoute.subRouteName === newSubRoute.subRouteName
-  //   );
-  //   const newValue = {
-  //     ...newSubRoute,
-  //     addresses: newSubRoute.addresses.concat(rightChecked),
-  //   };
-  //   const updatedNewSubRoute = newSubRouteList.map((subRoute, index) =>
-  //     index === findIndex ? newValue : subRoute
-  //   );
-
-  //   setNewSubRoute(newValue);
-  //   setNewSubRouteList(updatedNewSubRoute);
-  //   setUnsignedAddressList(not(unsignedAddressList, rightChecked));
-  //   setChecked(not(checked, rightChecked));
-  //   setIsRightCheck(false);
-  // };
-
   const handleCheckedLeft = () => {
     if (!newSubRoute.subRouteName) {
       setModal({
@@ -210,8 +191,12 @@ const AdminRoutingMainAdd = () => {
     const isExistName = newSubRouteList.some(
       subRoute => subRoute.subRouteName === subRoutNameRef.current
     );
+    if (isExistName) {
+      alert('이미 존재하는 서브라우트명입니다.');
+      return;
+    }
 
-    if (!isExistName && subRoutNameRef.current) {
+    if (subRoutNameRef.current) {
       setNewSubRoute({ subRouteName: subRoutNameRef.current, addresses: [] });
       setNewSubRouteList([
         ...newSubRouteList,
@@ -255,21 +240,22 @@ const AdminRoutingMainAdd = () => {
       method: 'GET',
       params: {
         keyword: keywordRef.current,
+        routeTypeId: routeType.routeTypeId,
       },
     });
 
     const { status, data } = apiResult;
     if (status === 200) {
-      const unsignedAddresses = data.data.filter(item => {
-        return !newSubRouteList.some(route =>
-          route.addresses.some(
-            address => address.streetAddress === item.streetAddress
-          )
-        );
-      });
+      const signedAddressSet = new Set(
+        newSubRouteList.flatMap(subRoute =>
+          subRoute.addresses.map(address => address.streetAddress)
+        )
+      );
 
+      const unsignedAddresses = data.data.filter(
+        address => !signedAddressSet.has(address.streetAddress)
+      );
       setUnsignedAddressList(unsignedAddresses);
-      console.log(unsignedAddressList);
     }
   });
 
@@ -478,7 +464,7 @@ const AdminRoutingMainAdd = () => {
           })}
         </SubRouteInfoBox>
         <AsignedBox type='add'>
-          <SearchInputWraaper>
+          <SearchInputWraper>
             <SearchInputBasic
               placeholder={INPUT_TEXT.PLACEHOLDER.ROAD_ADDRESS}
               onChange={onChangeSignedKeyword}
@@ -489,7 +475,7 @@ const AdminRoutingMainAdd = () => {
               type='black'
               onClick={findRoadAddress}
             />
-          </SearchInputWraaper>
+          </SearchInputWraper>
           <CheckAllBox>
             <CommonCheckBox
               onClickCheck={handleAllSignedAddress}
@@ -522,23 +508,23 @@ const AdminRoutingMainAdd = () => {
         </ButtonWrapper>
 
         <NonAsignedBox>
-          <SearchInputWraaper>
+          <SearchInputWraper>
             <SearchInputBasic
               placeholder={INPUT_TEXT.PLACEHOLDER.ROAD_ADDRESS}
               onChange={onChangeKeyword}
               onSearch={getAddressList}
-            ></SearchInputBasic>
+            />
             <CommonButton
               label={BUTTON_TEXT.VIEW}
               type='black'
               onClick={getAddressList}
             />
-          </SearchInputWraaper>
+          </SearchInputWraper>
           <CheckAllBox>
             <CommonCheckBox
               onClickCheck={handleAllUnsignedAddress}
               isCheck={isRightCheck}
-            ></CommonCheckBox>
+            />
             <AddressText>{LABEL_TITLE.ROUTE.NON_ASINGED_ADDRESS}</AddressText>
           </CheckAllBox>
           {customList(unsignedAddressList)}

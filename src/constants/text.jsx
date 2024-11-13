@@ -86,6 +86,7 @@ export const BUTTON_TEXT = {
   DELETE: {
     DEFAULT: '삭제',
     ROUTE: '라우트 삭제',
+    ROUTE_TYPE: '라우트 타입 삭제',
     DRIVER_INFO: '배송기사 정보 삭제',
     ADMIN_USER: 'ADMIN 사용자 삭제',
   },
@@ -202,6 +203,7 @@ export const TABLE_HEADER = {
     IS_ACTIVE: '활성/비활성',
     MODIFY_ROUTE_TYPE_INFO: '라우트 타입 정보 수정',
     MODIFY_ROUTE: '라우트 수정',
+    DELETE_ROUTE_TYPE: '라우트 타입 삭제',
   },
   // 라우트 목록
   ROUTE: {

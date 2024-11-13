@@ -1,21 +1,12 @@
 // admin - 라우팅 관리
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import api from '../../../utils/api';
 import { formatDate } from '../../../utils/common';
-import {
-  isValidRouteTypeString,
-  isValidStringLength,
-} from '../../../utils/validation';
+import { isValidRouteTypeString, isValidStringLength } from '../../../utils/validation';
 import { useModalStore } from '../../../contexts/useModalStore';
 import useRoutingStore from '../../../contexts/useRoutingStore';
-import {
-  BUTTON_TEXT,
-  TITLE,
-  FILTER,
-  INPUT_TEXT,
-  LABEL_TITLE,
-} from '@constants/text';
+import { BUTTON_TEXT, FILTER, INPUT_TEXT, LABEL_TITLE, TITLE } from '@constants/text';
 import { ERROR_MESSAGE } from '../../../constants/message';
 import { ROUTING } from '../../../constants/apiEndpoint';
 import Header from '../../../components/layout/Header/Header';
@@ -119,13 +110,16 @@ const AdminRouting = () => {
               />
             ),
             modifyRouteTypeInfo: (
-              <Icon iconType='modify' onClick={() => activeModModal(data)} />
+              <Icon iconType="modify" onClick={() => activeModModal(data)} />
             ),
             modifyRoute: (
               <Icon
-                iconType='modify'
+                iconType="modify"
                 onClick={() => moveToModRouteType(data)}
               />
+            ),
+            deleteRouteType: (
+              <Icon iconType="delete" onClick={() => activeDelModal(data)} />
             ),
           }));
 
@@ -133,7 +127,7 @@ const AdminRouting = () => {
         setTotalPage(pagination.totalPages);
       }
     },
-    [page, size]
+    [page, size],
   );
 
   const modIsActiveStatus = async routeType => {
@@ -200,6 +194,47 @@ const AdminRouting = () => {
     }
   };
 
+  const deleteRoute = async routeTypeId => {
+    try {
+      const apiResult = await api.request({
+        Authorization: `Bearer ${userInfo.accessToken}`,
+        url: `${ROUTING.ROUTE_TYPE}/${routeTypeId}`,
+        method: 'DELETE',
+      });
+
+      if (apiResult.status === 200) {
+        await getRouteTypeList();
+        alert('라우트 타입 삭제가 완료되었습니다.');
+      } else {
+        setErrMsg(ERROR_MESSAGE.COMMON.DELETE);
+      }
+
+      closeModal();
+    } catch (err) {
+      setErrMsg(ERROR_MESSAGE.COMMON.DELETE);
+    }
+  };
+
+  const activeDelModal = routeTypeInfo => {
+    setModal({
+      isOpen: true,
+      title: BUTTON_TEXT.DELETE.ROUTE_TYPE,
+      proceedBtnName: BUTTON_TEXT.DELETE.DEFAULT,
+      children: (
+        <>
+          <InputBasic
+            display="flex"
+            title={LABEL_TITLE.ROUTE.ROUTE_TYPE}
+            value={routeTypeInfo.typeName}
+            disabled={true}
+            type={'modalContent'}
+          />
+        </>
+      ),
+      onProceed: () => deleteRoute(routeTypeInfo.routeTypeId),
+    });
+  };
+
   const moveToModRouteType = data => {
     setRouteType(data);
     navigate('/admin/routing-type/main');
@@ -261,13 +296,13 @@ const AdminRouting = () => {
           <InputBasic
             title={LABEL_TITLE.ROUTE_TYPE.ROUTE_TYPE_NAME}
             placeholder={INPUT_TEXT.PLACEHOLDER.ROUTE_NAME}
-            validation='required'
+            validation="required"
             onChange={onChangeTypeName}
           />
           <InputBasic
             title={LABEL_TITLE.ROUTE_TYPE.ROUTE_TYPE_DESCRIPTION}
             placeholder={INPUT_TEXT.PLACEHOLDER.ROUTE_DESCRIPTION}
-            validation='optional'
+            validation="optional"
             onChange={onChangeTypeDescription}
           />
         </>
@@ -328,7 +363,7 @@ const AdminRouting = () => {
         onButtonClick={[activeAddModal]}
         onFilterChange={handleFilterChange}
       />
-      <Table tableType='routeType' data={routeTypeList} />
+      <Table tableType="routeType" data={routeTypeList} />
       <Box
         sx={{
           display: 'flex',
@@ -354,8 +389,8 @@ const AdminRouting = () => {
                   {...item}
                 />
               )}
-              color='white'
-              shape='rounded'
+              color="white"
+              shape="rounded"
               showFirstButton
               showLastButton
             />

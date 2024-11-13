@@ -1,5 +1,8 @@
 @echo off
 
+cd /d C:\source\pcms-v2-fe
+git -c http.sslVerify=false pull
+
 set DOCKER_IMAGE_NAME=sms-fe-image
 set CONTAINER_NAME=sms-fe-container
 

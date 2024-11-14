@@ -67,7 +67,9 @@ const AdminRoutingMainModify = () => {
   const signedKeywordRef = useRef('');
   const routeNameRef = useRef('');
   const routeDescriptionRef = useRef('');
-  const subRoutNameRef = useRef('');
+  // const subRoutNameRef = useRef('');
+
+  const [subRouteName, setSubRouteName] = useState('');
 
   const [newSubRoute, setNewSubRoute] = useState({
     subRouteName: '',
@@ -99,8 +101,12 @@ const AdminRoutingMainModify = () => {
     routeDescriptionRef.current = description;
   };
 
-  const onChangeSubRouteName = subRouteName => {
-    subRoutNameRef.current = subRouteName;
+  // const onChangeSubRouteName = subRouteName => {
+  //   subRoutNameRef.current = subRouteName;
+  // };
+
+  const onChangeSubRouteName = event => {
+    setSubRouteName(event);
   };
 
   const handleCheckBox = value => () => {
@@ -179,17 +185,26 @@ const AdminRoutingMainModify = () => {
   };
 
   const addNewSubRoute = () => {
+    if (!subRouteName.trim()) {
+      alert('서브라우트 이름을 입력해주세요.');
+      return;
+    }
+
     const isExistName = newSubRouteList.some(
-      subRoute => subRoute.subRouteName === subRoutNameRef.current
+      subRoute => subRoute.subRouteName === subRouteName
     );
 
-    if (!isExistName && subRoutNameRef.current) {
-      setNewSubRoute({ subRouteName: subRoutNameRef.current, addresses: [] });
-      setNewSubRouteList([
-        ...newSubRouteList,
-        { subRouteName: subRoutNameRef.current, addresses: [] },
-      ]);
+    if (isExistName) {
+      alert('중복된 이름의 서브 라우트가 존재합니다.');
+      return;
     }
+
+    setNewSubRoute({ subRouteName: subRouteName, addresses: [] });
+    setNewSubRouteList([
+      ...newSubRouteList,
+      { subRouteName: subRouteName, addresses: [] },
+    ]);
+    setSubRouteName('');
   };
 
   const deleteSubRoute = subRoute => {
@@ -232,7 +247,11 @@ const AdminRoutingMainModify = () => {
       if (isRender) {
         routeNameRef.current = data.routeName;
         routeDescriptionRef.current = data.routeDescription;
-        setNewSubRoute(data.subRoutes[0]);
+        setNewSubRoute(
+          data.subRoutes.length > 0
+            ? data.subRoutes[0]
+            : { subRouteName: '', addresses: [] }
+        );
       }
 
       setNewSubRouteList(data.subRoutes);
@@ -376,7 +395,7 @@ const AdminRoutingMainModify = () => {
         }}
       >
         <List dense component='div' role='list'>
-          {items.map((value, index) => {
+          {items?.map((value, index) => {
             const labelId = `transfer-list-item-${index}-label`;
 
             return (

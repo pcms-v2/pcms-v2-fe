@@ -113,7 +113,7 @@ const AdminDeliveryRoundDetail = () => {
         const deliveryRoundDetailList = arrayData
           .sort((a, b) => a.productId - b.productId)
           .map(data => {
-            return {
+            const baseObject = {
               index: data.productId,
               trackingNumber: data.trackingNumber,
               streetAddress: (
@@ -149,7 +149,13 @@ const AdminDeliveryRoundDetail = () => {
                   }}
                 />
               ),
-              deliveryInfoDelete: (
+            };
+
+            if (
+              deliveryRoundDetail.deliveryRoundStatus ===
+              'DELIVERY_REQUEST_WAITING'
+            ) {
+              baseObject.deliveryInfoDelete = (
                 <Icon
                   iconType='delete'
                   onClick={() => {
@@ -159,10 +165,11 @@ const AdminDeliveryRoundDetail = () => {
                     );
                   }}
                 />
-              ),
-            };
-          });
+              );
+            }
 
+            return baseObject;
+          });
         setByAddress(data.totalAddressesCount);
         setByProduct(data.totalProductsCount);
         setDeliveryRoundDetailList(deliveryRoundDetailList);
@@ -714,9 +721,7 @@ const AdminDeliveryRoundDetail = () => {
         subTitle={`> ${deliveryRoundDetail.deliveryRoundName} > ${TITLE.DELIVERY_ROUND.REQUSET_DETAIL}`}
         buttonNumber={2}
         buttonLabel={
-          deliveryRoundDetail.deliveryRoundStatus ===
-            'DELIVERY_REQUEST_WAITING' ||
-          deliveryRoundDetail.deliveryRoundStatus === 'DELIVERY_REQUEST_CLOSE'
+          deliveryRoundDetail.deliveryRoundStatus === 'DELIVERY_REQUEST_WAITING'
             ? [BUTTON_TEXT.BACK, BUTTON_TEXT.CANCEL.DELIVERY_REQUEST]
             : [BUTTON_TEXT.BACK]
         }

@@ -381,7 +381,7 @@ export const INPUT_TEXT = {
   PLACEHOLDER: {
     SEARCH: '검색어를 입력하세요',
     DELIVERY_DRIVER: '배송기사 이름을 입력하세요',
-    ROUTE_NAME: '메인 라우트 명을 입력해 주세요.',
+    ROUTE_NAME: '메인 라우트 타입명을 입력해 주세요.',
     ROUTE_DESCRIPTION: '라우트 설명이 필요하다면 입력해 주세요.',
     SUB_ROUTE: '서브라우트 명을 입력해 주세요.',
     ROAD_ADDRESS: '찾고자 하는 도로명 주소를 검색해 주세요.',

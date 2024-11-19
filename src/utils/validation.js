@@ -22,8 +22,6 @@ export const isValidStringLength = (str, maxLength) => {
 
 export const isValidPhoneNumber = str => {
   const regex = /^\d{3}-\d{4}-\d{4}$/;
-  console.log(regex.test(str));
-  console.log(typeof regex);
   return regex.test(str);
 };
 
@@ -41,8 +39,7 @@ export const isValidHangulOnly = str => {
 };
 
 export const isValidAddress = str => {
-  const regex = /^[가-힣0-9,-\s()]+$/;
-
+  const regex = /^[가-힣0-9,-.\s()#]+$/;
   return regex.test(str);
 };
 

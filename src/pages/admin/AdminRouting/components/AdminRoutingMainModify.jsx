@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  Checkbox,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Checkbox,
   Paper,
 } from '@mui/material';
 import Header from '../../../../components/layout/Header/Header';
@@ -34,17 +34,17 @@ import { useModalStore } from '../../../../contexts/useModalStore';
 import { ERROR_MESSAGE } from '../../../../constants/message';
 import useRoutingStore from '../../../../contexts/useRoutingStore';
 import {
-  SubRouteSearchWrapper,
-  SearchWrapper,
-  SearchInputWraaper,
-  ButtonWrapper,
-  AsignedBox,
-  NonAsignedBox,
-  SubRouteInfoText,
-  CheckAllBox,
   AddressText,
-  SubRouteInfoBox,
+  AsignedBox,
   BootstrapButton,
+  ButtonWrapper,
+  CheckAllBox,
+  NonAsignedBox,
+  SearchInputWraaper,
+  SearchWrapper,
+  SubRouteInfoBox,
+  SubRouteInfoText,
+  SubRouteSearchWrapper,
 } from '../AdminRouting.styles';
 import { useUserStore } from '../../../../contexts/useUserStore';
 
@@ -100,10 +100,6 @@ const AdminRoutingMainModify = () => {
   const onChangeRouteDescription = description => {
     routeDescriptionRef.current = description;
   };
-
-  // const onChangeSubRouteName = subRouteName => {
-  //   subRoutNameRef.current = subRouteName;
-  // };
 
   const onChangeSubRouteName = event => {
     setSubRouteName(event);
@@ -198,7 +194,6 @@ const AdminRoutingMainModify = () => {
       alert('중복된 이름의 서브 라우트가 존재합니다.');
       return;
     }
-
     setNewSubRoute({ subRouteName: subRouteName, addresses: [] });
     setNewSubRouteList([
       ...newSubRouteList,
@@ -262,30 +257,28 @@ const AdminRoutingMainModify = () => {
     }
   };
 
-  const getAddressList = useCallback(async subRoutes => {
+  const getAddressList = useCallback(async () => {
     const apiResult = await api.request({
       Authorization: `Bearer ${userInfo.accessToken}`,
       url: ROUTING.ROUTE_ADDRESS,
       method: 'GET',
       params: {
         keyword: keywordRef.current,
+        routeTypeId: routeType.routeTypeId,
       },
     });
 
     const { status, data } = apiResult;
     if (status === 200) {
-      const addresses = subRoutes
-        ? subRoutes
-        : newSubRouteList.flatMap(route => route.addresses);
+      const newAddressSet = new Set(
+        newSubRouteList.flatMap(route =>
+          route.addresses.map(address => address.streetAddress)
+        )
+      );
 
-      const unsignedAddresses = data.data.filter(address => {
-        return !addresses.some(
-          subRouteAddress =>
-            subRouteAddress.streetAddress === address.streetAddress &&
-            subRouteAddress.lotAddress === address.lotAddress
-        );
-      });
-
+      const unsignedAddresses = data.data.filter(
+        address => !newAddressSet.has(address.streetAddress)
+      );
       setUnsignedAddressList(unsignedAddresses);
     }
   });
@@ -462,6 +455,7 @@ const AdminRoutingMainModify = () => {
           <InputBasic
             display='flex'
             type='basic'
+            value={subRouteName}
             title={LABEL_TITLE.ROUTE.SUB_ROUTE}
             placeholder={INPUT_TEXT.PLACEHOLDER.SUB_ROUTE}
             onChange={onChangeSubRouteName}

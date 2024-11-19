@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../utils/api';
 import {
@@ -25,25 +25,25 @@ import SearchInputBasic from '../../../../components/common/SearchInput';
 import CommonCheckBox from '../../../../components/common/CheckBox';
 import Icon from '../../../../components/common/Icon';
 import {
+  Checkbox,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Checkbox,
   Paper,
 } from '@mui/material';
 import {
-  SubRouteSearchWrapper,
-  SearchWrapper,
-  SearchInputWraaper,
-  ButtonWrapper,
-  AsignedBox,
-  NonAsignedBox,
-  SubRouteInfoText,
-  CheckAllBox,
   AddressText,
-  SubRouteInfoBox,
+  AsignedBox,
   BootstrapButton,
+  ButtonWrapper,
+  CheckAllBox,
+  NonAsignedBox,
+  SearchInputWraaper,
+  SearchWrapper,
+  SubRouteInfoBox,
+  SubRouteInfoText,
+  SubRouteSearchWrapper,
 } from '../AdminRouting.styles';
 import { useUserStore } from '../../../../contexts/useUserStore';
 
@@ -59,7 +59,7 @@ const AdminRoutingMainAdd = () => {
   const { userInfo } = useUserStore();
   const navigate = useNavigate();
 
-  const { routeType, routeMainDetail } = useRoutingStore();
+  const { routeType } = useRoutingStore();
   const { setModal, setErrMsg, closeModal } = useModalStore();
 
   const keywordRef = useRef('');
@@ -139,25 +139,6 @@ const AdminRoutingMainAdd = () => {
     setChecked(not(checked, leftChecked));
     setIsLeftCheck(false);
   };
-
-  // const handleCheckedLeft = () => {
-  //   const findIndex = newSubRouteList.findIndex(
-  //     subRoute => subRoute.subRouteName === newSubRoute.subRouteName
-  //   );
-  //   const newValue = {
-  //     ...newSubRoute,
-  //     addresses: newSubRoute.addresses.concat(rightChecked),
-  //   };
-  //   const updatedNewSubRoute = newSubRouteList.map((subRoute, index) =>
-  //     index === findIndex ? newValue : subRoute
-  //   );
-
-  //   setNewSubRoute(newValue);
-  //   setNewSubRouteList(updatedNewSubRoute);
-  //   setUnsignedAddressList(not(unsignedAddressList, rightChecked));
-  //   setChecked(not(checked, rightChecked));
-  //   setIsRightCheck(false);
-  // };
 
   const handleCheckedLeft = () => {
     if (!newSubRoute.subRouteName) {
@@ -270,21 +251,22 @@ const AdminRoutingMainAdd = () => {
       method: 'GET',
       params: {
         keyword: keywordRef.current,
+        routeTypeId: routeType.routeTypeId,
       },
     });
 
     const { status, data } = apiResult;
     if (status === 200) {
-      const unsignedAddresses = data.data.filter(item => {
-        return !newSubRouteList.some(route =>
-          route.addresses.some(
-            address => address.streetAddress === item.streetAddress
-          )
-        );
-      });
+      const newAddressSet = new Set(
+        newSubRouteList.flatMap(route =>
+          route.addresses.map(address => address.streetAddress)
+        )
+      );
 
+      const unsignedAddresses = data.data.filter(
+        address => !newAddressSet.has(address.streetAddress)
+      );
       setUnsignedAddressList(unsignedAddresses);
-      console.log(unsignedAddressList);
     }
   });
 

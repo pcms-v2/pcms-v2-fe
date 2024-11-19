@@ -48,6 +48,7 @@ export const ERROR_MESSAGE = {
     ROUTE_NAME_LENGTH: '메인 라우트명은 최대 10자만 입력 가능합니다.',
     ROUTE_DESCRIPTION_LENGTH: '라우트 설명은 최대 20자만 입력 가능합니다.',
     SUB_ROUTE_NAME_LENGTH: '서브 라우트명은 최대 8자만 입력 가능합니다.',
+    NO_SUB_ROUTE: '서브 라우트를 추가해주세요.',
   },
   DELIVERY: {
     DRIVER: {

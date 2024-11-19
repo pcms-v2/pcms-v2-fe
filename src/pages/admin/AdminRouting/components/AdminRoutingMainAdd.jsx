@@ -66,7 +66,9 @@ const AdminRoutingMainAdd = () => {
   const signedKeywordRef = useRef('');
   const routeNameRef = useRef('');
   const routeDescriptionRef = useRef('');
-  const subRoutNameRef = useRef('');
+  // const subRoutNameRef = useRef('');
+
+  const [subRouteName, setSubRouteName] = useState('');
 
   const [newSubRoute, setNewSubRoute] = useState({
     subRouteName: '',
@@ -98,8 +100,12 @@ const AdminRoutingMainAdd = () => {
     routeDescriptionRef.current = description;
   };
 
-  const onChangeSubRouteName = subRouteName => {
-    subRoutNameRef.current = subRouteName;
+  // const onChangeSubRouteName = subRouteName => {
+  //   subRoutNameRef.current = subRouteName;
+  // };
+
+  const onChangeSubRouteName = event => {
+    setSubRouteName(event);
   };
 
   const handleCheckBox = value => () => {
@@ -207,17 +213,26 @@ const AdminRoutingMainAdd = () => {
   };
 
   const addNewSubRoute = () => {
+    if (!subRouteName.trim()) {
+      alert('서브라우트 이름을 입력해주세요.');
+      return;
+    }
+
     const isExistName = newSubRouteList.some(
-      subRoute => subRoute.subRouteName === subRoutNameRef.current
+      subRoute => subRoute.subRouteName === subRouteName
     );
 
-    if (!isExistName && subRoutNameRef.current) {
-      setNewSubRoute({ subRouteName: subRoutNameRef.current, addresses: [] });
-      setNewSubRouteList([
-        ...newSubRouteList,
-        { subRouteName: subRoutNameRef.current, addresses: [] },
-      ]);
+    if (isExistName) {
+      alert('중복된 이름의 서브 라우트가 존재합니다.');
+      return;
     }
+
+    setNewSubRoute({ subRouteName: subRouteName, addresses: [] });
+    setNewSubRouteList([
+      ...newSubRouteList,
+      { subRouteName: subRouteName, addresses: [] },
+    ]);
+    setSubRouteName('');
   };
 
   const deleteSubRoute = subRoute => {
@@ -450,7 +465,8 @@ const AdminRoutingMainAdd = () => {
             title={LABEL_TITLE.ROUTE.SUB_ROUTE}
             placeholder={INPUT_TEXT.PLACEHOLDER.SUB_ROUTE}
             onChange={onChangeSubRouteName}
-          ></InputBasic>
+            value={subRouteName}
+          />
           <CommonButton
             label={BUTTON_TEXT.ADD.DEFAULT}
             type='black'

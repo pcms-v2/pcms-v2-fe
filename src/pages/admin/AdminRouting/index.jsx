@@ -241,7 +241,6 @@ const AdminRouting = () => {
   };
 
   const addRouteType = async () => {
-    console.log(1);
     if (
       typeDescriptionRef.current &&
       !isValidRouteTypeString(typeDescriptionRef.current)

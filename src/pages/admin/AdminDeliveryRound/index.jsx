@@ -243,7 +243,7 @@ const AdminDeliveryRound = () => {
               <div>{`총 요청 건 : ${data.productsCount}건`}</div>
             </>
           ),
-          requestDateTime: formatDate(data.requestDateTime),
+          requestDateTime: formatDate(data.requestAt),
           requestDetail: (
             <Icon iconType='detail' onClick={() => showDeliveryDetail(data)} />
           ),

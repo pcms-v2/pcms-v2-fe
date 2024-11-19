@@ -35,7 +35,7 @@ const InputBasic = ({
       if (onChange) {
         onChange(newValue);
       }
-    }, 300),
+    }, 0),
     []
   );
 

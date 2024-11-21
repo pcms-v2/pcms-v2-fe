@@ -88,8 +88,7 @@ const AdminRouting = () => {
       let params = {};
 
       if (activeType.current !== FILTER.BUTTON.ALL) {
-        params.isActive =
-          activeType.current === FILTER.BUTTON.ACTIVE ? true : false;
+        params.isActive = activeType.current === FILTER.BUTTON.ACTIVE;
       }
 
       const apiResult = await api.request({
@@ -254,6 +253,10 @@ const AdminRouting = () => {
   };
 
   const addRouteType = async () => {
+    if (!typeNameRef.current || typeNameRef.current === '') {
+      setErrMsg('라우트 타입명을 입력해주세요.');
+      return;
+    }
     if (
       typeDescriptionRef.current &&
       !isValidRouteTypeString(typeDescriptionRef.current)

@@ -63,8 +63,7 @@ const AdminDeliveryRound = () => {
   const [totalPage, setTotalPage] = useState(1);
 
   const modalSelectOption = useRef('');
-  const [modalFileData, setModalFileData] = useState(null);
-  // const modalFileData = useRef('');
+  const modalFileData = useRef(null);
 
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
@@ -142,8 +141,7 @@ const AdminDeliveryRound = () => {
 
   // [x] 모달 파일 데이터 변경 핸들러
   const handleFileDataChange = data => {
-    console.log(data);
-    setModalFileData(data);
+    modalFileData.current = data;
   };
 
   // [x] 배송 요청 추가
@@ -152,15 +150,14 @@ const AdminDeliveryRound = () => {
       setErrMsg('화주사를 선택해주세요.');
       return;
     }
-    if (modalFileData == null) {
+    if (modalFileData.current == null) {
       setErrMsg('파일이 첨부되지 않았습니다.');
       return;
     }
 
     const formData = new FormData();
     formData.append('shipperId', modalSelectOption.current);
-    formData.append('template', modalFileData);
-    console.log('modalFileData', modalFileData);
+    formData.append('template', modalFileData.current);
 
     try {
       const response = await uploadApi.request({
@@ -177,7 +174,11 @@ const AdminDeliveryRound = () => {
         setErrMsg('배송 요청 추가에 실패했습니다.');
       }
     } catch (error) {
-      setErrMsg('배송 요청 추가 중 오류가 발생했습니다.');
+      if (error.response.data.error === 'INVALID_FIELD') {
+        setErrMsg('배송 요청 템플릿에 잘못된 형식의 값이 입력되었습니다.');
+      } else {
+        setErrMsg('배송 요청 추가 중 오류가 발생했습니다.');
+      }
     }
   };
 

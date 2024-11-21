@@ -71,7 +71,7 @@ const ModalFileUploader = ({ type, title, setFileData, errorDownload }) => {
       .then(response => {
         if (response.data) {
           setFileName(file.name);
-          setFileData(formData);
+          setFileData(file);
           setDataCount(response.data);
         }
       });

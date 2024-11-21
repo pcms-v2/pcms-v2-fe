@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import {
@@ -41,8 +41,6 @@ import uploadApi from '../../../utils/uploadApi';
 import { formatDate, getNo } from '../../../utils/common';
 
 import { ModalChildren } from './AdminDeliveryRound.styles';
-
-import { Outlet } from 'react-router-dom';
 import { Separator } from '../../../components/common/Separator';
 import { useUserStore } from '../../../contexts/useUserStore';
 
@@ -229,10 +227,9 @@ const AdminDeliveryRound = () => {
     }
 
     if (selectedShipper && selectedShipper !== '전체') {
-      const shipperId = shipperList.find(
+      params.shipperId = shipperList.find(
         shipper => shipper.name === selectedShipper
       )?.id;
-      params.shipperId = shipperId;
     }
 
     const apiResult = await api.request({

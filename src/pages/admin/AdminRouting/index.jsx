@@ -293,8 +293,12 @@ const AdminRouting = () => {
       }
 
       closeModal();
-    } catch (err) {
-      setErrMsg(ERROR_MESSAGE.COMMON.INSERT);
+    } catch (error) {
+      if (error.response.data.error === 'DUPLICATED_DATA') {
+        setErrMsg('중복된 라우트 타입명이 존재합니다.');
+      } else {
+        setErrMsg(ERROR_MESSAGE.COMMON.INSERT);
+      }
     }
   };
 

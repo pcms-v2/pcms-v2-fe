@@ -26,9 +26,8 @@ export const isValidPhoneNumber = str => {
 };
 
 export const isValidEnglishHangulOnly = str => {
-  const regex = /^[가-힣a-zA-Z\s]+$/;
-  // const regex = /^[가-힣a-zA-Z\sㄱ-ㅎㅏ-ㅣ]+$/; //한글 영어 혼합 3가지
-
+  // const regex = /^[가-힣a-zA-Z\s]+$/;
+  const regex = /^[가-힣a-zA-Z\sㄱ-ㅎㅏ-ㅣ]+$/; //한글 영어 혼합 3가지
   return regex.test(str);
 };
 

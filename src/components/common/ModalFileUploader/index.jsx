@@ -59,13 +59,8 @@ const ModalFileUploader = ({ type, title, setFileData, errorDownload }) => {
 
   const attachTemplateFile = async event => {
     const file = event.target.files[0];
-    const reader = new FileReader();
     const formData = new FormData();
-    if (file) {
-      reader.onload = () => {
-        formData.append('template', file);
-      };
-    }
+    formData.append('template', file);
 
     await uploadApi
       .request({
@@ -76,8 +71,8 @@ const ModalFileUploader = ({ type, title, setFileData, errorDownload }) => {
       .then(response => {
         if (response.data) {
           setFileName(file.name);
-          setDataCount(response.data);
           setFileData(formData);
+          setDataCount(response.data);
         }
       });
   };

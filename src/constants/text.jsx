@@ -194,7 +194,7 @@ export const TABLE_HEADER = {
   NO_DATA: '데이터가 없습니다.',
   // 라우트 타입 목록
   ROUTE_TYPE: {
-    ROUTE_TYPE_ID: 'No',
+    NO: 'No',
     TYPE_NAME: '타입 명',
     TYPE_DESCRIPTION: '타입 설명',
     VERSION: '마지막 버전',
@@ -207,7 +207,7 @@ export const TABLE_HEADER = {
   },
   // 라우트 목록
   ROUTE: {
-    MAIN_ROUTE_ID: 'No',
+    NO: 'No',
     ROUTE_NAME: '메인 라우트 명',
     SUB_ROUTE_NAMES: '할당된 서브라우트',
     ROUTE_DESCRIPTION: '라우트 설명',

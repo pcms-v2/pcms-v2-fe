@@ -6,7 +6,11 @@ export const camelToUpperSnakeCase = str => {
 
 export const formatDate = dateString => {
   const date = dayjs(dateString);
-  const formattedDate = date.format('YY-MM-DD / HH:mm');
+  return date.format('YY-MM-DD / HH:mm');
+};
 
-  return formattedDate;
+export const getNo = (pagination, index) => {
+  const start =
+    (pagination.totalPages - pagination.pageNumber) * pagination.pageSize;
+  return start + index + 1;
 };

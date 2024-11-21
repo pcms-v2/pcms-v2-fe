@@ -2,11 +2,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import api from '../../../utils/api';
-import { formatDate } from '../../../utils/common';
-import { isValidRouteTypeString, isValidStringLength } from '../../../utils/validation';
+import { formatDate, getNo } from '../../../utils/common';
+import {
+  isValidRouteTypeString,
+  isValidStringLength,
+} from '../../../utils/validation';
 import { useModalStore } from '../../../contexts/useModalStore';
 import useRoutingStore from '../../../contexts/useRoutingStore';
-import { BUTTON_TEXT, FILTER, INPUT_TEXT, LABEL_TITLE, TITLE } from '@constants/text';
+import {
+  BUTTON_TEXT,
+  FILTER,
+  INPUT_TEXT,
+  LABEL_TITLE,
+  TITLE,
+} from '@constants/text';
 import { ERROR_MESSAGE } from '../../../constants/message';
 import { ROUTING } from '../../../constants/apiEndpoint';
 import Header from '../../../components/layout/Header/Header';
@@ -100,34 +109,38 @@ const AdminRouting = () => {
 
         const routeTypeList = arrayData
           .sort((a, b) => a.routeTypeId - b.routeTypeId)
-          .map(data => ({
-            ...data,
-            updatedAt: formatDate(data.updatedAt),
-            isActive: (
-              <SwitchBasic
-                active={data.isActive}
-                onClick={() => modIsActiveStatus(data)}
-              />
-            ),
-            modifyRouteTypeInfo: (
-              <Icon iconType="modify" onClick={() => activeModModal(data)} />
-            ),
-            modifyRoute: (
-              <Icon
-                iconType="modify"
-                onClick={() => moveToModRouteType(data)}
-              />
-            ),
-            deleteRouteType: (
-              <Icon iconType="delete" onClick={() => activeDelModal(data)} />
-            ),
-          }));
+          .map((data, index) => {
+            const { routeTypeId: _, ...rest } = data;
+            return {
+              no: getNo(pagination, index),
+              ...rest,
+              updatedAt: formatDate(data.updatedAt),
+              isActive: (
+                <SwitchBasic
+                  active={data.isActive}
+                  onClick={() => modIsActiveStatus(data)}
+                />
+              ),
+              modifyRouteTypeInfo: (
+                <Icon iconType='modify' onClick={() => activeModModal(data)} />
+              ),
+              modifyRoute: (
+                <Icon
+                  iconType='modify'
+                  onClick={() => moveToModRouteType(data)}
+                />
+              ),
+              deleteRouteType: (
+                <Icon iconType='delete' onClick={() => activeDelModal(data)} />
+              ),
+            };
+          });
 
         setRouteTypeList(routeTypeList);
         setTotalPage(pagination.totalPages);
       }
     },
-    [page, size],
+    [page, size]
   );
 
   const modIsActiveStatus = async routeType => {
@@ -223,7 +236,7 @@ const AdminRouting = () => {
       children: (
         <>
           <InputBasic
-            display="flex"
+            display='flex'
             title={LABEL_TITLE.ROUTE.ROUTE_TYPE}
             value={routeTypeInfo.typeName}
             disabled={true}
@@ -295,13 +308,13 @@ const AdminRouting = () => {
           <InputBasic
             title={LABEL_TITLE.ROUTE_TYPE.ROUTE_TYPE_NAME}
             placeholder={INPUT_TEXT.PLACEHOLDER.ROUTE_NAME}
-            validation="required"
+            validation='required'
             onChange={onChangeTypeName}
           />
           <InputBasic
             title={LABEL_TITLE.ROUTE_TYPE.ROUTE_TYPE_DESCRIPTION}
             placeholder={INPUT_TEXT.PLACEHOLDER.ROUTE_DESCRIPTION}
-            validation="optional"
+            validation='optional'
             onChange={onChangeTypeDescription}
           />
         </>
@@ -362,7 +375,7 @@ const AdminRouting = () => {
         onButtonClick={[activeAddModal]}
         onFilterChange={handleFilterChange}
       />
-      <Table tableType="routeType" data={routeTypeList} />
+      <Table tableType='routeType' data={routeTypeList} />
       <Box
         sx={{
           display: 'flex',
@@ -388,8 +401,8 @@ const AdminRouting = () => {
                   {...item}
                 />
               )}
-              color="white"
-              shape="rounded"
+              color='white'
+              shape='rounded'
               showFirstButton
               showLastButton
             />

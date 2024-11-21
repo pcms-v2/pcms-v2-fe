@@ -38,7 +38,7 @@ import {
 import { SELECT_OPTIONS } from '../../../utils/selectOptions';
 import api from '../../../utils/api';
 import uploadApi from '../../../utils/uploadApi';
-import { formatDate } from '../../../utils/common';
+import { formatDate, getNo } from '../../../utils/common';
 
 import { ModalChildren } from './AdminDeliveryRound.styles';
 
@@ -244,10 +244,11 @@ const AdminDeliveryRound = () => {
     const { status, data } = apiResult;
     if (status === 200) {
       const { data: arrayData, pagination } = data;
+
       const deliveryRoundList = arrayData
         .sort((a, b) => a.deliveryRoundId - b.deliveryRoundId)
-        .map(data => ({
-          index: data.deliveryRoundId,
+        .map((data, index) => ({
+          index: getNo(pagination, index),
           shipperName: data.shipperName,
           deliveryRoundName: (
             <>

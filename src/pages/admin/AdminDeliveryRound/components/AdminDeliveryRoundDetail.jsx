@@ -25,7 +25,7 @@ import { useModalStore } from '../../../../contexts/useModalStore';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import api from '../../../../utils/api';
 import { ROUTING } from '../../../../constants/apiEndpoint';
-import { formatDate } from '../../../../utils/common';
+import { formatDate, getNo } from '../../../../utils/common';
 import Table from '../../../../components/common/Table';
 import Icon from '../../../../components/common/Icon';
 import InputBasic from '../../../../components/common/Input';
@@ -112,9 +112,9 @@ const AdminDeliveryRoundDetail = () => {
 
         const deliveryRoundDetailList = arrayData
           .sort((a, b) => a.productId - b.productId)
-          .map(data => {
+          .map((data, index) => {
             const baseObject = {
-              index: data.productId,
+              index: getNo(pagination, index),
               trackingNumber: data.trackingNumber,
               streetAddress: (
                 <>

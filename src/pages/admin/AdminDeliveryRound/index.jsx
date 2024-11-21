@@ -63,7 +63,8 @@ const AdminDeliveryRound = () => {
   const [totalPage, setTotalPage] = useState(1);
 
   const modalSelectOption = useRef('');
-  const modalFileData = useRef('');
+  const [modalFileData, setModalFileData] = useState(null);
+  // const modalFileData = useRef('');
 
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
@@ -141,14 +142,25 @@ const AdminDeliveryRound = () => {
 
   // [x] 모달 파일 데이터 변경 핸들러
   const handleFileDataChange = data => {
-    modalFileData.current = data;
+    console.log(data);
+    setModalFileData(data);
   };
 
   // [x] 배송 요청 추가
   const addDeliveryRequest = async () => {
+    if (modalSelectOption.current == null) {
+      setErrMsg('화주사를 선택해주세요.');
+      return;
+    }
+    if (modalFileData == null) {
+      setErrMsg('파일이 첨부되지 않았습니다.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('shipperId', modalSelectOption.current);
-    formData.append('template', modalFileData.current);
+    formData.append('template', modalFileData);
+    console.log('modalFileData', modalFileData);
 
     try {
       const response = await uploadApi.request({

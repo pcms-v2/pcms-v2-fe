@@ -1,9 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
   Container,
   Content,
+  DeliveryExcelResult,
+  ErrorDownload,
+  ErrorDownLoadBox,
   FileInputWrapper,
   FileName,
   ResultBox,
@@ -11,20 +14,19 @@ import {
   ResultTitle,
   Title,
   WarningText,
-  DeliveryExcelResult,
-  ErrorDownLoadBox,
-  ErrorDownload,
 } from '@components/common/ModalFileUploader/ModalFileUploader.styles.js';
-import * as XLSX from 'xlsx';
 import { Separator } from '../../../components/common/Separator';
 import { useModalStore } from '@contexts/useModalStore.jsx';
 import Icon from '../Icon';
+import { ROUTING } from '@constants/apiEndpoint.jsx';
+import uploadApi from '@utils/uploadApi.jsx';
 
 const ModalFileUploader = ({ type, title, setFileData, errorDownload }) => {
   const [fileName, setFileName] = useState('');
-  const [fileData, setLocalFileData] = useState([]);
-  const [errorData, setErrorData] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [fileData] = useState([]);
+  const [dataCount, setDataCount] = useState(null);
+  const [errorData] = useState([]);
+  const [errorMessage] = useState('');
   const { setErrMsg } = useModalStore();
 
   const fileInputRef = useRef(null);
@@ -55,101 +57,29 @@ const ModalFileUploader = ({ type, title, setFileData, errorDownload }) => {
     }
   }, [errorData]);
 
-  const handleFileChange = event => {
+  const attachTemplateFile = async event => {
     const file = event.target.files[0];
     const reader = new FileReader();
+    const formData = new FormData();
     if (file) {
-      reader.onload = event => {
-        const binaryStr = event.target.result;
-        const workbook = XLSX.read(binaryStr, { type: 'binary' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-        // 빈 배열 제거
-        jsonData = jsonData.filter(row => row.length > 0);
-
-        validateAndSetData(jsonData);
-        setFileName(file.name);
-
-        const formData = new FormData();
-        formData.append(
-          'template',
-          new Blob([binaryStr], { type: 'application/octet-stream' })
-        );
-        setFileData(formData);
+      reader.onload = () => {
+        formData.append('template', file);
       };
-      reader.readAsBinaryString(file);
-    }
-  };
-
-  const validateAndSetData = data => {
-    const requiredColumns =
-      type === 'delivery'
-        ? [
-            '운송장번호',
-            '고객 이름',
-            '고객 연락처',
-            '고객 도로명 주소 (상세주소 포함)',
-            '고객 지번 주소 (상세주소 포함)',
-          ]
-        : type === 'recovery'
-          ? [
-              '운송장번호',
-              '고객 이름',
-              '구분(반품, 프레시백)',
-              '고객 연락처',
-              '고객 도로명 주소 (상세주소 포함)',
-              '고객 지번 주소 (상세주소 포함)',
-            ]
-          : type === 'collection'
-            ? [
-                '고객 이름',
-                '고객 연락처',
-                '고객 도로명 주소 (상세주소 포함)',
-                '고객 지번 주소 (상세주소 포함)',
-                '운송장번호',
-                '택배사',
-              ]
-            : type === 'sorting'
-              ? ['운송장번호', '라우트명']
-              : [];
-
-    if (data.length === 0) {
-      setLocalFileData([]);
-      setErrorData([]);
-      setErrorMessage('시트가 비어 있습니다.');
-      return;
     }
 
-    const headers = data[0];
-    const isValid = requiredColumns.every(col => headers.includes(col));
-    if (isValid) {
-      const validData = data.filter(
-        (row, index) =>
-          index === 0 ||
-          ((type === 'collection'
-            ? row.length >= 4
-            : row.length === headers.length) &&
-            !row.includes())
-      );
-      const invalidData = data.filter(
-        (row, index) =>
-          index !== 0 &&
-          ((type === 'collection'
-            ? row.length <= 3
-            : row.length !== headers.length) ||
-            row.includes())
-      );
-
-      setLocalFileData(validData.slice(1));
-      setErrorData(invalidData);
-      setErrorMessage('');
-    } else {
-      setLocalFileData([]);
-      setErrorData([]);
-      setErrorMessage('잘못된 템플릿 파일입니다.');
-    }
+    await uploadApi
+      .request({
+        url: ROUTING.DELIVERY_VERIFY,
+        method: 'POST',
+        data: formData,
+      })
+      .then(response => {
+        if (response.data) {
+          setFileName(file.name);
+          setDataCount(response.data);
+          setFileData(formData);
+        }
+      });
   };
 
   return (
@@ -171,7 +101,7 @@ const ModalFileUploader = ({ type, title, setFileData, errorDownload }) => {
         ref={fileInputRef}
         type='file'
         accept='.xlsx, .xls'
-        onChange={handleFileChange}
+        onChange={attachTemplateFile}
         style={{
           display: 'none',
         }}
@@ -189,10 +119,10 @@ const ModalFileUploader = ({ type, title, setFileData, errorDownload }) => {
             <ResultBox>
               <ResultTitle>파일 첨부 결과 조회</ResultTitle>
               <ResultText>
-                총 택배 회수 예정 수량 : {fileData.length + errorData.length}건
+                총 택배 회수 예정 수량 : {dataCount.totalCount}건
                 <br />
-                정상 건 : {fileData.length}건<br />
-                오류 건 : {errorData.length}건
+                정상 건 : {dataCount.normalCount}건<br />
+                오류 건 : {dataCount.errorCount}건
               </ResultText>
               {type === 'sorting' && (
                 <ErrorDownLoadBox

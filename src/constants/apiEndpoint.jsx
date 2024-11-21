@@ -10,6 +10,7 @@ export const ROUTING = {
   DELIVERY_TEMPLATE: '/delivery/template', // 배송 요청 템플릿 다운로드
   DELIVERY_CLOSE: '/delivery/close', //배송 요청 마감
   DELIVERY_PRODUCE: '/delivery/product', //배송 요청수정 및 삭제
+  DELIVERY_VERIFY: '/delivery/verify',
   VEHICL: '/vehicle',
 
   DELIVERY_DRIVER: '/user/driver', //배송기사

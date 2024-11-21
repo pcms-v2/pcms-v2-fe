@@ -50,7 +50,7 @@ api.interceptors.response.use(
       const { userInfo } = useUserStore.getState();
       return noneTokenApi
         .post('/user/refresh', null, {
-          headers: { Authorization: `Bearer ${userInfo.refreshToken}` },
+          headers: { Authorization: `Bearer ${userInfo.refreshToken}a` },
         })
         .then(response => {
           const newAccessToken = response.data.accessToken;
@@ -67,6 +67,9 @@ api.interceptors.response.use(
           window.location.href = '/login';
           return Promise.reject(refreshError);
         });
+    } else {
+      useUserStore.getState().clearUser();
+      window.location.href = '/login';
     }
 
     return Promise.reject(error);

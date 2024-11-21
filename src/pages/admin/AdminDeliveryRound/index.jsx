@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import {
@@ -38,11 +38,9 @@ import {
 import { SELECT_OPTIONS } from '../../../utils/selectOptions';
 import api from '../../../utils/api';
 import uploadApi from '../../../utils/uploadApi';
-import { formatDate } from '../../../utils/common';
+import { formatDate, getNo } from '../../../utils/common';
 
 import { ModalChildren } from './AdminDeliveryRound.styles';
-
-import { Outlet } from 'react-router-dom';
 import { Separator } from '../../../components/common/Separator';
 import { useUserStore } from '../../../contexts/useUserStore';
 
@@ -63,7 +61,7 @@ const AdminDeliveryRound = () => {
   const [totalPage, setTotalPage] = useState(1);
 
   const modalSelectOption = useRef('');
-  const modalFileData = useRef('');
+  const modalFileData = useRef(null);
 
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
@@ -146,6 +144,15 @@ const AdminDeliveryRound = () => {
 
   // [x] 배송 요청 추가
   const addDeliveryRequest = async () => {
+    if (modalSelectOption.current == null) {
+      setErrMsg('화주사를 선택해주세요.');
+      return;
+    }
+    if (modalFileData.current == null) {
+      setErrMsg('파일이 첨부되지 않았습니다.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('shipperId', modalSelectOption.current);
     formData.append('template', modalFileData.current);
@@ -165,7 +172,11 @@ const AdminDeliveryRound = () => {
         setErrMsg('배송 요청 추가에 실패했습니다.');
       }
     } catch (error) {
-      setErrMsg('배송 요청 추가 중 오류가 발생했습니다.');
+      if (error.response.data.error === 'INVALID_FIELD') {
+        setErrMsg('배송 요청 템플릿에 잘못된 형식의 값이 입력되었습니다.');
+      } else {
+        setErrMsg('배송 요청 추가 중 오류가 발생했습니다.');
+      }
     }
   };
 
@@ -216,10 +227,9 @@ const AdminDeliveryRound = () => {
     }
 
     if (selectedShipper && selectedShipper !== '전체') {
-      const shipperId = shipperList.find(
+      params.shipperId = shipperList.find(
         shipper => shipper.name === selectedShipper
       )?.id;
-      params.shipperId = shipperId;
     }
 
     const apiResult = await api.request({
@@ -232,10 +242,11 @@ const AdminDeliveryRound = () => {
     const { status, data } = apiResult;
     if (status === 200) {
       const { data: arrayData, pagination } = data;
+
       const deliveryRoundList = arrayData
         .sort((a, b) => a.deliveryRoundId - b.deliveryRoundId)
-        .map(data => ({
-          index: data.deliveryRoundId,
+        .map((data, index) => ({
+          index: getNo(pagination, index),
           shipperName: data.shipperName,
           deliveryRoundName: (
             <>

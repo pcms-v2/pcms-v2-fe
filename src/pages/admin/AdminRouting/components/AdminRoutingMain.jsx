@@ -25,7 +25,7 @@ import Stack from '@mui/material/Stack';
 import api from '../../../../utils/api';
 import { ROUTING } from '../../../../constants/apiEndpoint';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { formatDate } from '../../../../utils/common';
+import { formatDate, getNo } from '../../../../utils/common';
 import { ERROR_MESSAGE, WARNING_MESSAGE } from '../../../../constants/message';
 import { ViewSize } from '../AdminRouting.styles';
 import { useUserStore } from '../../../../contexts/useUserStore';
@@ -85,18 +85,22 @@ const AdminRoutingMain = () => {
 
       const routeTypeDetailList = arrayData
         .sort((a, b) => a.mainRouteId - b.mainRouteId)
-        .map(data => ({
-          ...data,
-          viewRoute: (
-            <Icon iconType='detail' onClick={() => moveToRouteDetail(data)} />
-          ),
-          modifyRoute: (
-            <Icon iconType='modify' onClick={() => moveToModRoute(data)} />
-          ),
-          deleteRoute: (
-            <Icon iconType='delete' onClick={() => activeDelModal(data)} />
-          ),
-        }));
+        .map((data, index) => {
+          const { mainRouteId: _, ...rest } = data;
+          return {
+            no: getNo(pagination, index),
+            ...rest,
+            viewRoute: (
+              <Icon iconType='detail' onClick={() => moveToRouteDetail(data)} />
+            ),
+            modifyRoute: (
+              <Icon iconType='modify' onClick={() => moveToModRoute(data)} />
+            ),
+            deleteRoute: (
+              <Icon iconType='delete' onClick={() => activeDelModal(data)} />
+            ),
+          };
+        });
 
       setRouteTypeDetailList(routeTypeDetailList);
       setTotalPage(pagination.totalPages);

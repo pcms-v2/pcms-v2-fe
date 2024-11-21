@@ -732,7 +732,7 @@ const AdminDeliveryRoundDetail = () => {
         ]}
         statusValue={[
           deliveryRoundDetail.shipperName,
-          formatDate(deliveryRoundDetail.requestDateTime),
+          formatDate(deliveryRoundDetail.requestAt),
           byAddress,
           byProduct,
         ]}

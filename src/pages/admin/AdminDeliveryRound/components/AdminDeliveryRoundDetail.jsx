@@ -22,10 +22,10 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { ViewSize } from '../../AdminRouting/AdminRouting.styles';
 import { useModalStore } from '../../../../contexts/useModalStore';
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import api from '../../../../utils/api';
 import { ROUTING } from '../../../../constants/apiEndpoint';
-import { formatDate } from '../../../../utils/common';
+import { formatDate, getNo } from '../../../../utils/common';
 import Table from '../../../../components/common/Table';
 import Icon from '../../../../components/common/Icon';
 import InputBasic from '../../../../components/common/Input';
@@ -112,9 +112,9 @@ const AdminDeliveryRoundDetail = () => {
 
         const deliveryRoundDetailList = arrayData
           .sort((a, b) => a.productId - b.productId)
-          .map(data => {
+          .map((data, index) => {
             const baseObject = {
-              index: data.productId,
+              index: getNo(pagination, index),
               trackingNumber: data.trackingNumber,
               streetAddress: (
                 <>
@@ -342,7 +342,6 @@ const AdminDeliveryRoundDetail = () => {
         navigate(`/admin/deliveryRound`);
       }
     } catch (error) {
-      console.log('error :', error);
       setErrMsg(ERROR_MESSAGE.DELIVERY.ROUND.DELIVERY_REQUEST_DEADLINE);
     }
   };
@@ -477,24 +476,16 @@ const AdminDeliveryRoundDetail = () => {
     if (lotAddressRef.current === null) {
       lotAddressRef.current = lotAddress;
     }
-    console.log(
-      recipientNameRef.current,
-      phoneNumberRef.current,
-      trackingNumberRef.current,
-      streetAddressRef.current,
-      lotAddressRef.current
-    );
+
     if (
       // 고객 이름이 한글이나 영어가 아닐때
-      !isValidEnglishHangulOnly(recipientNameRef.current) ||
-      !isValidEnglishHangulOnly(recipientName)
+      !isValidEnglishHangulOnly(recipientNameRef.current)
     ) {
       setErrMsg(ERROR_MESSAGE.DELIVERY.ROUND.DELIVERY_INFO_NAME);
       return;
     } else if (
       // 고객이름이 10자넘을때
-      !isValidStringLength(recipientNameRef.current, 10) ||
-      !isValidStringLength(recipientName, 10)
+      !isValidStringLength(recipientNameRef.current, 10)
     ) {
       setErrMsg(ERROR_MESSAGE.DELIVERY.ROUND.ROUND_NAME_LENGTH);
       return;
@@ -502,27 +493,24 @@ const AdminDeliveryRoundDetail = () => {
       // 전화번호가 11자리가 아닐때
       !isValidPhoneNumber(phoneNumberRef.current)
     ) {
-      console.log(phoneNumberRef.current, phoneNumber);
       setErrMsg(ERROR_MESSAGE.COMMON.INFO.PHONE);
       return;
     } else if (
       // 주소가 한글이나 숫자, 특수문자가 아닐때
       !isValidAddress(streetAddressRef.current) ||
-      !isValidAddress(lotAddress)
+      !isValidAddress(lotAddressRef.current)
     ) {
       setErrMsg(ERROR_MESSAGE.DELIVERY.ROUND.DELIVERY_INFO_ADDRESS);
       return;
     } else if (
       // 운송장번호가 숫자가 아닐때
-      !isValidNumberOnly(trackingNumberRef.current) ||
-      !isValidNumberOnly(trackingNumber)
+      !isValidNumberOnly(trackingNumberRef.current)
     ) {
       setErrMsg(ERROR_MESSAGE.DELIVERY.ROUND.DELIVERY_INFO_TRACKING);
       return;
     } else if (
       // 운송장번호가 14자리 이상이거나, 11자리 이하 일때
-      !isValidTrackingNumber(trackingNumberRef.current) ||
-      !isValidTrackingNumber(trackingNumber)
+      !isValidTrackingNumber(trackingNumberRef.current)
     ) {
       setErrMsg(ERROR_MESSAGE.DELIVERY.ROUND.DELIVERY_INFO_TRACKING_LENGTH);
       return;
@@ -552,6 +540,12 @@ const AdminDeliveryRoundDetail = () => {
     } catch (error) {
       setErrMsg(ERROR_MESSAGE.COMMON.MODIFY);
     }
+
+    recipientNameRef.current = null;
+    phoneNumberRef.current = null;
+    trackingNumberRef.current = null;
+    streetAddressRef.current = null;
+    lotAddressRef.current = null;
   };
 
   // [x]: 배송정보(고객정보) 수정 모달 오픈
@@ -738,7 +732,7 @@ const AdminDeliveryRoundDetail = () => {
         ]}
         statusValue={[
           deliveryRoundDetail.shipperName,
-          formatDate(deliveryRoundDetail.requestDateTime),
+          formatDate(deliveryRoundDetail.requestAt),
           byAddress,
           byProduct,
         ]}

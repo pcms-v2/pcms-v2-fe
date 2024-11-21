@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useUserStore, clearUserStorage } from '../contexts/useUserStore';
+import { clearUserStorage, useUserStore } from '../contexts/useUserStore';
 
 const API_URL =
   'https://my-json-server.typicode.com/mj9457/DEMO_JSON/profile/admin1'; // admin = admin1, user = user1
@@ -11,13 +11,11 @@ export const login = async (username, password) => {
       password,
     });
     if (response) {
-      console.log('로그인 성공');
       useUserStore.getState().setUser(response.data); // Zustand store에 사용자 데이터 저장
     }
     return response.data;
   } catch (error) {
-    console.error('로그인 오류:', error);
-    throw error;
+    console.error(error);
   }
 };
 
@@ -30,7 +28,6 @@ export const getToken = () => {
 };
 
 export const logout = () => {
-  console.log('로그아웃 되었습니다.');
   localStorage.removeItem('token');
   localStorage.removeItem('userRole');
   localStorage.removeItem('userName');

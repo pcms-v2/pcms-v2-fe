@@ -1,17 +1,17 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   BackgroundContainer,
-  LoginContainer,
+  ButtonWrap,
+  ErrText,
+  ExplanWrap,
   ImageContainer,
-  MainTitle,
-  SubTitle,
+  LoginContainer,
   LoginForm,
+  MainTitle,
   ModalOverlay,
   ModalWrapper,
-  ErrText,
-  ButtonWrap,
-  ExplanWrap,
+  SubTitle,
 } from './Login.styles';
 import loginImage from '../assets/images/loginMain.png';
 import CommonButton from '../components/common/Button';
@@ -23,6 +23,9 @@ import { ERROR_MESSAGE } from '../constants/message';
 import InputBasic from '../components/common/Input';
 import { ModalChildren } from './admin/AdminDeliveryRound/AdminDeliveryRound.styles';
 import { isValidPassword, isValidPasswordLength } from '../utils/validation';
+import { Typography } from '@mui/material';
+import Stack from '@mui/material/Stack';
+import PropTypes from 'prop-types';
 
 const Login = ({ display }) => {
   const { setUserInfo, userInfo } = useUserStore();
@@ -99,20 +102,14 @@ const Login = ({ display }) => {
         <ModalOverlay>
           <ModalWrapper>
             <ErrText>
-              {failInfo === 'NOT_FOUND_DATA' && (
-                <>
-                  <p>회원 정보를 확인할 수 없습니다.</p>
-                  <p>아이디를 다시 입력해 주세요.</p>
-                </>
-              )}
-              {failInfo === 'AUTHENTICATION_FAILED' && (
-                <>
-                  <p>
-                    비밀번호를 잘못 입력하셨어요.
-                    <br />
-                    비밀번호를 다시 입력해 주세요.
-                  </p>
-                </>
+              {(failInfo === 'NOT_FOUND_DATA' ||
+                failInfo === 'AUTHENTICATION_FAILED') && (
+                <Stack alignItems='center' spacing={'10px'}>
+                  <Typography>
+                    아이디와 비밀번호가 일치하지 않습니다.
+                  </Typography>
+                  <Typography>다시 확인해 주세요.</Typography>
+                </Stack>
               )}
               {failInfo === 'ACCESS_DENIED' && (
                 <>
@@ -256,6 +253,10 @@ const Login = ({ display }) => {
       {openModal && <OpenLoginFaildModal />}
     </BackgroundContainer>
   );
+};
+
+Login.propTypes = {
+  display: PropTypes.bool.isRequired,
 };
 
 export default Login;

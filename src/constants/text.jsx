@@ -194,7 +194,7 @@ export const TABLE_HEADER = {
   NO_DATA: '데이터가 없습니다.',
   // 라우트 타입 목록
   ROUTE_TYPE: {
-    ROUTE_TYPE_ID: 'No',
+    NO: 'No',
     TYPE_NAME: '타입 명',
     TYPE_DESCRIPTION: '타입 설명',
     VERSION: '마지막 버전',
@@ -207,7 +207,7 @@ export const TABLE_HEADER = {
   },
   // 라우트 목록
   ROUTE: {
-    MAIN_ROUTE_ID: 'No',
+    NO: 'No',
     ROUTE_NAME: '메인 라우트 명',
     SUB_ROUTE_NAMES: '할당된 서브라우트',
     ROUTE_DESCRIPTION: '라우트 설명',
@@ -383,7 +383,7 @@ export const INPUT_TEXT = {
   PLACEHOLDER: {
     SEARCH: '검색어를 입력하세요',
     DELIVERY_DRIVER: '배송기사 이름을 입력하세요',
-    ROUTE_NAME: '메인 라우트 타입명을 입력해 주세요.',
+    ROUTE_NAME: '라우트 타입명을 입력해 주세요.',
     ROUTE_DESCRIPTION: '라우트 설명이 필요하다면 입력해 주세요.',
     SUB_ROUTE: '서브라우트 명을 입력해 주세요.',
     ROAD_ADDRESS: '찾고자 하는 도로명 주소를 검색해 주세요.',

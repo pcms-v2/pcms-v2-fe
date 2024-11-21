@@ -138,8 +138,11 @@ export const ModalWrapper = styled.div`
 
 export const ErrText = styled.div`
   display: flex;
-  margin: 50px auto;
+  height: 70%;
+  justify-content: center;
+  margin: auto;
   flex-direction: column;
+  padding-top: 10px;
   & > p {
     color: #4d4d4d;
     text-align: center;

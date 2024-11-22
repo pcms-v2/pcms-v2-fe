@@ -173,7 +173,11 @@ const AdminDeliveryRound = () => {
       }
     } catch (error) {
       if (error.response.data.error === 'INVALID_FIELD') {
-        setErrMsg('배송 요청 템플릿에 잘못된 형식의 값이 입력되었습니다.');
+        const detail = error.response.data.detailMessage;
+        const column = detail.split(':')[0];
+        const reason = detail.split(':')[1];
+        alert(`${column} 오류\n${reason}`)
+        setErrMsg("템플릿에서 잘못된 값이 입력되었습니다.");
       } else {
         setErrMsg('배송 요청 추가 중 오류가 발생했습니다.');
       }

@@ -43,7 +43,7 @@ export const ERROR_MESSAGE = {
     ROUTE_DESCRIPTION_LENGTH: '라우트 타입 설명은 최대 25자만 입력 가능합니다.',
   },
   ROUTE: {
-    TEXT: '메인 라우트명과 설명은 한글, 영문, 숫자만 입력 가능합니다.',
+    TEXT: '메인 라우트명은 영문, 숫자만 입력 가능합니다.',
     SUB_ROUTE_TEXT: '서브라우트는 영문, 숫자만 입력 가능합니다.',
     ROUTE_NAME_LENGTH: '메인 라우트명은 최대 10자만 입력 가능합니다.',
     ROUTE_DESCRIPTION_LENGTH: '라우트 설명은 최대 20자만 입력 가능합니다.',

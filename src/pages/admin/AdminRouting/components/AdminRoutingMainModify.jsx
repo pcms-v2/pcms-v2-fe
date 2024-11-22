@@ -22,7 +22,6 @@ import DeleteBox from '../../../../components/DeleteBox';
 import { ROUTING } from '../../../../constants/apiEndpoint';
 import {
   isValidEnglishNumberOnly,
-  isValidString,
   isValidStringLength,
 } from '../../../../utils/validation';
 import SearchInputBasic from '../../../../components/common/SearchInput';
@@ -284,11 +283,7 @@ const AdminRoutingMainModify = () => {
   });
 
   const modRoute = async () => {
-    if (
-      !isValidString(routeNameRef.current) ||
-      (routeDescriptionRef.current &&
-        !isValidString(routeDescriptionRef.current))
-    ) {
+    if (!isValidEnglishNumberOnly(routeNameRef.current)) {
       setModal({
         isOpen: true,
         proceedBtnName: BUTTON_TEXT.CONFIRM.DEFAULT,

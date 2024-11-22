@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../../../utils/api';
 import {
   isValidEnglishNumberOnly,
-  isValidString,
   isValidStringLength,
 } from '../../../../utils/validation';
 import { useModalStore } from '../../../../contexts/useModalStore';
@@ -275,11 +274,7 @@ const AdminRoutingMainAdd = () => {
   });
 
   const addNewRoute = async () => {
-    if (
-      !isValidString(routeNameRef.current) ||
-      (routeDescriptionRef.current &&
-        !isValidString(routeDescriptionRef.current))
-    ) {
+    if (!isValidEnglishNumberOnly(routeNameRef.current)) {
       setModal({
         isOpen: true,
         proceedBtnName: BUTTON_TEXT.CONFIRM.DEFAULT,

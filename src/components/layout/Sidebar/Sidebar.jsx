@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { Link, useLocation, useNavigate, useMatch } from 'react-router-dom';
+import { Link, useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { logout } from '../../../services/authService';
 import { ALL_LINKS } from '../../../constants/links';
 import {
@@ -16,6 +16,9 @@ import {
 } from './Sidebar.styles';
 import { useUserStore } from '../../../contexts/useUserStore';
 import Icon from '../../common/Icon';
+import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 // 사용자 권한에 따라 보여줄 링크를 가져오는 함수
 const getLinks = role =>
@@ -64,33 +67,46 @@ const Sidebar = () => {
 
   return (
     <SidebarContainer>
-      <div>
-        <HeaderContainer>
-          <TitleBox>SMS</TitleBox>
-          <LogoutButton onClick={handleLogout}>
-            Log out
-            <Icon iconType='logout' />
-          </LogoutButton>
-        </HeaderContainer>
-        <WelcomeMessage>{`${userName}님 반갑습니다 :)`}</WelcomeMessage>
-        <Divider />
-      </div>
-      <RouteList aria-label='main mailbox folders'>
-        {links.map((link, index) => (
-          <ListItems key={index}>
-            <Link to={link.path}>
-              <ListItem active={isActive(link.path)}>
-                {link.title}
-                {isActive(link.path) && (
-                  <ArrowWrapper>
-                    <Icon iconType='sidebarArrow' />
-                  </ArrowWrapper>
-                )}
-              </ListItem>
-            </Link>
-          </ListItems>
-        ))}
-      </RouteList>
+      <Stack
+        height={'100%'}
+        flexDirection={'column'}
+        justifyContent={'space-between'}
+      >
+        <Box>
+          <div>
+            <HeaderContainer>
+              <TitleBox>SMS</TitleBox>
+              <LogoutButton onClick={handleLogout}>
+                Log out
+                <Icon iconType='logout' />
+              </LogoutButton>
+            </HeaderContainer>
+            <WelcomeMessage>{`${userName}님 반갑습니다 :)`}</WelcomeMessage>
+            <Divider />
+          </div>
+          <RouteList aria-label='main mailbox folders'>
+            {links.map((link, index) => (
+              <ListItems key={index}>
+                <Link to={link.path}>
+                  <ListItem active={isActive(link.path)}>
+                    {link.title}
+                    {isActive(link.path) && (
+                      <ArrowWrapper>
+                        <Icon iconType='sidebarArrow' />
+                      </ArrowWrapper>
+                    )}
+                  </ListItem>
+                </Link>
+              </ListItems>
+            ))}
+          </RouteList>
+        </Box>
+
+        <Typography sx={{ textAlign: 'center', fontWeight: '600' }}>
+          라스트마일 소트 <br />
+          매니지먼트 시스템 v1.0
+        </Typography>
+      </Stack>
     </SidebarContainer>
   );
 };

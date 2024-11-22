@@ -46,30 +46,33 @@ api.interceptors.response.use(
       error.response?.data.error === 'EXPIRED_TOKEN' &&
       !originalRequest._retry
     ) {
-      originalRequest._retry = true;
-      const { userInfo } = useUserStore.getState();
-      return noneTokenApi
-        .post('/user/refresh', null, {
-          headers: { Authorization: `Bearer ${userInfo.refreshToken}a` },
-        })
-        .then(response => {
-          const newAccessToken = response.data.accessToken;
-          useUserStore.getState().setUserInfo({
-            ...userInfo,
-            accessToken: newAccessToken,
-            refreshToken: response.data.refreshToken,
+      if (error.response?.data.error === 'EXPIRED_TOKEN') {
+        originalRequest._retry = true;
+        const { userInfo } = useUserStore.getState();
+        return noneTokenApi
+          .post('/user/refresh', null, {
+            headers: { Authorization: `Bearer ${userInfo.refreshToken}a` },
+          })
+          .then(response => {
+            const newAccessToken = response.data.accessToken;
+            useUserStore.getState().setUserInfo({
+              ...userInfo,
+              accessToken: newAccessToken,
+              refreshToken: response.data.refreshToken,
+            });
+            originalRequest.headers['Authorization'] =
+              `Bearer ${newAccessToken}`;
+            return api(originalRequest);
+          })
+          .catch(refreshError => {
+            useUserStore.getState().clearUser();
+            window.location.href = '/login';
+            return Promise.reject(refreshError);
           });
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-          return api(originalRequest);
-        })
-        .catch(refreshError => {
-          useUserStore.getState().clearUser();
-          window.location.href = '/login';
-          return Promise.reject(refreshError);
-        });
-    } else {
-      useUserStore.getState().clearUser();
-      window.location.href = '/login';
+      } else {
+        useUserStore.getState().clearUser();
+        window.location.href = '/login';
+      }
     }
 
     return Promise.reject(error);

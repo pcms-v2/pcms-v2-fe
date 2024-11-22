@@ -189,7 +189,7 @@ const AdminDeliveryRoundDetail = () => {
   };
 
   // [x] 배송요청 삭제
-  const cancleDeliveryRequest = async () => {
+  const cancelDeliveryRequest = async () => {
     const deliveryRoundId = deliveryRoundDetail.deliveryRoundId;
 
     const apiResult = await api.request({
@@ -231,7 +231,7 @@ const AdminDeliveryRoundDetail = () => {
           <Separator $top={20} $bottom={10} />
         </ModalChildren>
       ),
-      onProceed: () => cancleDeliveryRequest(),
+      onProceed: () => cancelDeliveryRequest(),
     });
   };
 
@@ -397,9 +397,9 @@ const AdminDeliveryRoundDetail = () => {
     });
 
     if (apiResult.status === 200) {
+      await getDeliveryRoundDetail();
       alert('배송정보가 삭제되었습니다.');
       closeModal();
-      await getDeliveryRoundDetail();
     }
   };
 

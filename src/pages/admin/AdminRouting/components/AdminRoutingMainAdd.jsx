@@ -358,7 +358,11 @@ const AdminRoutingMainAdd = () => {
         proceedBtnName: BUTTON_TEXT.CONFIRM.DEFAULT,
         onProceed: closeModal,
       });
-      setErrMsg(ERROR_MESSAGE.COMMON.INSERT);
+      if (error.response.data.error === 'DUPLICATED_DATA') {
+        setErrMsg('중복된 메인 라우트명이 존재합니다.');
+      } else {
+        setErrMsg(ERROR_MESSAGE.COMMON.INSERT);
+      }
     }
   };
 

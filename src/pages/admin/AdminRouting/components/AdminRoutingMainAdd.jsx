@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../utils/api';
 import {
@@ -245,6 +245,10 @@ const AdminRoutingMainAdd = () => {
   };
 
   const getAddressList = useCallback(async () => {
+    if (keywordRef.current == null || keywordRef.current === '') {
+      alert('검색어를 입력해주세요.');
+    }
+
     const apiResult = await api.request({
       Authorization: `Bearer ${userInfo.accessToken}`,
       url: ROUTING.ROUTE_ADDRESS,
@@ -410,10 +414,6 @@ const AdminRoutingMainAdd = () => {
   const moveToRouteMain = () => {
     navigate('/admin/routing-type/main');
   };
-
-  useEffect(() => {
-    getAddressList();
-  }, []);
 
   return (
     <>

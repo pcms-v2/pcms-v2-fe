@@ -250,14 +250,14 @@ const AdminRoutingMainModify = () => {
       }
 
       setNewSubRouteList(data.subRoutes);
-
-      await getAddressList(
-        data.subRoutes.flatMap(subRoute => subRoute.addresses)
-      );
     }
   };
 
   const getAddressList = useCallback(async () => {
+    if (keywordRef.current == null || keywordRef.current === '') {
+      alert('검색어를 입력해주세요.');
+    }
+
     const apiResult = await api.request({
       Authorization: `Bearer ${userInfo.accessToken}`,
       url: ROUTING.ROUTE_ADDRESS,
